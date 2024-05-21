@@ -12,7 +12,7 @@ int jumpSearch(int arr[], int x, int n)
 	//then do linear search in the block
 	while(arr[end]<x && end<n)
 		{
-			start = end;//update start to next block
+			start = end;//update start to next block testting
 			end+=sqrt(n);//update end to next block
 	
 			//if current end value is bigger then array size
