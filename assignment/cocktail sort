@@ -1,0 +1,79 @@
+#include <iostream>
+#include <stdexcept>
+
+using namespace std;
+
+
+void CocktailSort(int a[], int n) {
+    bool swapped = true;
+    int start = 0;
+    int end = n - 1;
+
+    while (swapped) {
+        swapped = false;
+
+       
+        for (int i = start; i < end; ++i) {
+            if (a[i] > a[i + 1]) {
+                swap(a[i], a[i + 1]);
+                swapped = true;
+            }
+        }
+
+
+        if (!swapped)
+            break;
+
+        swapped = false;
+        --end;
+
+   
+        for (int i = end - 1; i >= start; --i) {
+            if (a[i] > a[i + 1]) {
+                swap(a[i], a[i + 1]);
+                swapped = true;
+            }
+        }
+        ++start;
+    }
+}
+
+
+void printArray(int a[], int n) {
+    for (int i = 0; i < n; i++)
+        cout << a[i] << " ";
+    cout << endl;
+}
+
+
+int main() {
+    int initial_size = 7;
+    int a[100] = {72, 36, 12, 28, 71, 56, 98}; of 100 elements
+    int current_size = initial_size;
+
+    cout << "Original array:\n";
+    printArray(a, current_size);
+
+    cout << "You can enter additional numbers to sort (type 'done' to finish):\n";
+    string input;
+    while (cin >> input && input != "done") {
+        try {
+            if (current_size >= 100) {
+                cout << "Array is full. Cannot add more numbers.\n";
+                break;
+            }
+            int num = stoi(input);
+            a[current_size] = num;
+            ++current_size;
+        } catch (const invalid_argument& e) {
+            cout << "Invalid input. Please enter an integer or 'done' to finish.\n";
+        }
+    }
+
+    CocktailSort(a, current_size);
+
+    cout << "Sorted array:\n";
+    printArray(a, current_size);
+
+    return 0;
+}
