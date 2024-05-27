@@ -9,7 +9,7 @@ tm getTime(string time)
 {
 		char d;
 		int day,month,year;
-		tm time_struct;
+		tm time_struct = {0};
 
 		istringstream iss(time);
 		iss >> day>> d >> month>> d >>year;
@@ -22,7 +22,6 @@ tm getTime(string time)
 }
 
 struct Node {
-    int data;
 	string name,id,course;
 	float gpa;
     Node* next;
@@ -35,6 +34,7 @@ struct Node {
 		this->gpa = gpa;
 		this->course = course;
 		this->time = getTime(timer);
+		next = NULL;
 	}
 };
 
@@ -168,10 +168,11 @@ class menu
 				cout<<"Course : ";
 				cin.ignore();
 				getline(cin,course[i]);
-				cout<<"Join Time : ";
+				cout<<"Join Time(DD-MM-YYYY) : ";
 				cin>>gettime[i];
+				cin.ignore();
 
-				add_link(add_id[i],n[i],g[i],course[i],time[i]);
+				add_link(add_id[i],n[i],g[i],course[i],gettime[i]);
 			}
 		}
 		
@@ -216,7 +217,7 @@ int main()
 	while(choice == 1)
 	{
 		m.main_menu();
-		cout<<"Do you want to continue?(1=Yes, Other = No)";
+		cout<<"Do you want to continue?(1=Yes, Other = No) : ";
 		cin>>choice;
 	}
 }
