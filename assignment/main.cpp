@@ -1,18 +1,40 @@
 #include<iostream>
-using namespace std;
+#include<iomanip>
 #include<string>
+#include<ctime>
+#include<sstream>
+using namespace std;
+
+tm getTime(string time)
+{
+		char d;
+		int day,month,year;
+		tm time_struct;
+
+		istringstream iss(time);
+		iss >> day>> d >> month>> d >>year;
+
+		time_struct.tm_year = year ; // Years since 1900
+		time_struct.tm_mon = month ;    // Months are 0-based
+		time_struct.tm_mday = day; 
+
+		return time_struct;
+}
 
 struct Node {
     int data;
-	string name,id;
+	string name,id,course;
 	float gpa;
     Node* next;
+	tm time;
 
-	Node(string id,string name,float gpa)
+	Node(string id,string name,float gpa,string course,string timer)
 	{
 		this->id = id;
 		this->name = name;
 		this->gpa = gpa;
+		this->course = course;
+		this->time = getTime(timer);
 	}
 };
 
@@ -21,7 +43,7 @@ class menu
 	private:
 		Node* head;
 		int choice, choice1;
-		string *id, *name, time, course;
+		string *id, *name ,*course,*time;
 		float *gpa;
 		int size;
 	public:
@@ -30,16 +52,18 @@ class menu
 			head = NULL;
 		}
 
-		void data(string *id, string *name, float *gpa, int size)
+		void data(string *id, string *name, float *gpa, int size,string *course,string *time)
 		{
 			this->size = size;
 			this->id = id;
 			this->name = name;
 			this->gpa = gpa;
+			this->course = course;
+			this->time = time;
 
 				for(int z=0;z<size;z++)
 				{
-					add_link(id[z],name[z],gpa[z]);
+					add_link(id[z],name[z],gpa[z],course[z],time[z]);
 				}
 		}
 		void main_menu()
@@ -94,9 +118,9 @@ class menu
 			}
 		}
 
-		void add_link(string id,string name,float gpa)
+		void add_link(string id,string name,float gpa,string course,string time)
 		{
-			Node *new_node = new Node(id,name,gpa);
+			Node *new_node = new Node(id,name,gpa,course,time);
 			if(!head)
 			{
 				head = new_node;
@@ -116,7 +140,11 @@ class menu
 			Node *current = head;
 			while(current)
 			{
-				cout<<"Studend id: "<<current->id<<"\nStudent Name: "<<current->name<<"\nStudent GPA: "<<current->gpa<<endl;
+				cout<<"Studend id: "<<current->id<<
+				"\nStudent Name: "<<current->name<<
+				"\nStudent GPA: "<<current->gpa<<
+				"\nCourse: "<<current->course<<
+				"\nJoin Time: "<<current->time.tm_mday<<"-"<<current->time.tm_mon<<"-"<<current->time.tm_year<<endl<<endl;
 				current = current->next;
 			}
 		}
@@ -126,7 +154,7 @@ class menu
 			int addnum;
 			cout<<"How many student you want to add ? ";
 			cin>>addnum;
-			string add_id[addnum], n[addnum];
+			string add_id[addnum], n[addnum],gettime[addnum];
 			float g[addnum];
 			for(int i=0; i<addnum; i++)
 			{
@@ -137,8 +165,13 @@ class menu
 				cin>>n[i];
 				cout<<"GPA : ";
 				cin>>g[i];
+				cout<<"Course : ";
+				cin.ignore();
+				getline(cin,course[i]);
+				cout<<"Join Time : ";
+				cin>>gettime[i];
 
-				add_link(add_id[i],n[i],g[i]);
+				add_link(add_id[i],n[i],g[i],course[i],time[i]);
 			}
 		}
 		
@@ -157,9 +190,14 @@ class menu
 };
 int main()
 {
+
 	string i[] = {"1","2","3", "4"};
 	string j[] = {"ming","yong","leong", "elysa"};
 	float g[] = {1.2, 1.3, 1.4, 1.5};
+	string course[] = {"Diploma in IT","Diploma in IT","Diploma in IT","Diploma in IT"};
+	string timee[] = {"12-2-2024","14-12-2023","22-5-2024","27-6-2024"};
+
+
 	int size = sizeof(i) / sizeof(i[0]);
 	menu m;
 	int choice;
@@ -169,16 +207,16 @@ int main()
 	// 	m.add_link(i[z],j[z],g[z]);
 	// }
 
-	m.data(i, j, g, size);
+	m.data(i, j, g, size,course,timee);
 
 	m.main_menu();
-	cout<<"Do you want to continue?(1=Yes, other = No) : ";
+	cout<<"Do you want to continue?(1=Yes, Other = No) : ";
 	cin>>choice;
 
 	while(choice == 1)
 	{
 		m.main_menu();
-		cout<<"Do you want to continue?(1=Yes, other = No)";
+		cout<<"Do you want to continue?(1=Yes, Other = No)";
 		cin>>choice;
 	}
 }
