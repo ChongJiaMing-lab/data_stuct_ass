@@ -252,7 +252,7 @@ public:
         }
     }
 
-    void search_by_id(string search_id)
+    void search_by_id(string search_id)//Elysa
     {
         Node* current = head;
         while (current)
@@ -267,7 +267,7 @@ public:
         cout << "Student not found!" << endl;
     }
 
-    void search_by_name(string search_name)
+    void search_by_name(string search_name)//Elysa
     {
         Node* current = head;
         while (current)
@@ -282,7 +282,7 @@ public:
         cout << "Student not found!" << endl;
     }
 
-    void search_by_gpa(float search_gpa)
+    void search_by_gpa(float search_gpa)//Elysa
     {
         Node* current = head;
         while (current)
@@ -297,7 +297,7 @@ public:
         cout << "Student not found!" << endl;
     }
 
-    void search_by_time(string search_time)
+    void search_by_time(string search_time)//Elysa
     {
         tm search_tm = getTime(search_time);
         Node* current = head;
@@ -315,7 +315,7 @@ public:
         cout << "Student not found!" << endl;
     }
 
-    void display_student(Node* student)
+    void display_student(Node* student)//Elysa
     {
     	system("cls");
     	cout<<"Student Found!"<<endl;
