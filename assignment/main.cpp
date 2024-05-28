@@ -2,6 +2,8 @@
 #include<iomanip>
 #include<string>
 #include<ctime>
+#include<cmath>
+#include<iomanip>
 #include<sstream>
 using namespace std;
 
@@ -76,6 +78,7 @@ public:
         cout << "1. View/Add students" << endl;
         cout << "2. Set 1 - (Cocktail Sort + Ubiquitous Binary Search)" << endl;
         cout << "2. Search student" << endl;//Elysa
+        cout<<"3. jump search"<<endl;
         cout << "3. Set 2 - (Pancake Sort + Jump Search)" << endl;
         cin >> choice;
         
@@ -93,6 +96,7 @@ public:
 		    }
 		    case 3: 
 			{
+				jump_search();
 		        break;
 		    }
         }
@@ -150,20 +154,26 @@ public:
         current->next = new_node;
     }
 
-    void view_students()
-    {
-        Node* current = head;
-        while (current)
-        {
-            cout << "Student id: " << current->id <<
-                "\nStudent Name: " << current->name <<
-                "\nStudent GPA: " << current->gpa <<
-                "\nCourse: " << current->course <<
-                "\nJoin Time: " << current->time.tm_mday << "-" << current->time.tm_mon + 1 << "-" << current->time.tm_year + 1900 << endl << endl;
-            current = current->next;
-        }
-    }
-
+	void view_students()
+	{
+	    Node* current = head;
+	    cout<<"============"<<endl<<"View students"<<endl<<"=============="<<endl<<endl;
+	    cout<<left<<setw(10)<<"ID"
+	        <<setw(10)<<"Name"
+	        <<setw(10)<<"GPA" 
+	        <<setw(10)<<"Course" 
+	        <<"Join Time"<<endl;
+	    cout<<"---------------------------------------------------------------------"<<endl;
+	    while(current)
+	    {
+	        cout<<left<<setw(10) << current->id 
+	            <<setw(10)<<current->name 
+	            <<setw(10)<<current->gpa 
+	            <<setw(10)<<current->course 
+				<<current->time.tm_mday<<"-"<<current->time.tm_mon + 1<<"-"<<current->time.tm_year + 1900 << endl;
+	        current = current->next;
+	    }
+	}
     void add_students()
     {
         int addnum;
@@ -203,8 +213,7 @@ public:
         cout << ">>>>>";
         cin >> search_choice;
     	cout << endl;
-
-
+    	
         int index = -1; 
 
         switch (search_choice) 
@@ -324,14 +333,166 @@ public:
         cout << "Course: " << course[index] << endl;
         cout << "Join Time: " << time[index] << endl;
     }
-};
-
+    
+    //jm
+    void jump_search()
+	{
+	    int schoice;
+	    cout<<"Search by:"<<endl;
+	    cout<<"1. ID"<<endl;
+	    cout<<"2. Name"<<endl;
+	    cout<<"3. GPA"<<endl;
+//	    cout<<"4. Course"<<endl;
+	    cout<<"5. Join Time"<<endl;
+	    cout<<">>>>>";
+	    cin>>schoice;
+	        
+	    switch (schoice) 
+		{
+	        case 1:{
+	            jump_id();
+				break;
+			}
+			case 2:{
+	           	jump_name();
+				break;
+			}
+			case 3:{
+	           	jump_gpa();
+				break;
+			}
+			case 4:{
+//	           	jump_course();
+				break;
+			} 
+			case 5:{
+	           	jump_time();
+				break;
+			}
+	    }
+	}
+	void jump_id()
+	{
+		string j_id;
+	   	cout<<"Enter the id that you want to search : ";
+	    cin>>j_id;
+	    int j_index = jump_search_string(id, j_id, size);
+	    if(j_index != -1)
+	    	jump_display(j_index);
+	    else
+	    	cout<<"The student not found"<<endl;
+	}
+	
+	void jump_name()
+	{
+		string j_n;
+	   	cout<<"Enter the name that you want to search : ";
+	    cin>>j_n;
+	    int j_index = jump_search_string(name, j_n, size);
+	    if(j_index != -1)
+	    	jump_display(j_index);
+	    else
+	    	cout<<"The student not found"<<endl;
+	}
+	
+	void jump_gpa()
+	{
+		float j_g;
+	   	cout<<"Enter the gpa that you want to search : ";
+	    cin>>j_g;
+	    int j_index = jump_search_float(gpa, j_g, size);
+	    if(j_index != -1)
+	    	jump_display(j_index);
+	    else
+	    	cout<<"The student not found"<<endl;
+	}
+	
+//	void jump_course()
+//	{
+//		string j_c;
+//	   	cout<<"Enter the course that you want to search : ";
+//	    cin>>j_c;
+//	    int j_index = jump_search_string(course, j_c, size);
+//	    if(j_index != -1)
+//	    	jump_display(j_index);
+//	    else
+//	    	cout<<"The student not found"<<endl;
+//	}
+	void jump_time()
+	{
+		string j_t;
+	   	cout<<"Enter the join time that you want to search : ";
+	    cin>>j_t;
+	    int j_index = jump_search_string(time, j_t, size);
+	    if(j_index != -1)
+	    	jump_display(j_index);
+	    else
+	    	cout<<"The student not found"<<endl;
+	}
+	int jump_search_string(string arr[], string x, int n)
+	{
+		int start=0;//the block start
+		int end=sqrt(n);//the block end, block jump size
+	
+		//check if the target is in the range of blocks
+		//if yes, the while loop will stop
+		//then do linear search in the block
+		while(arr[end]<x && end<n)
+		{
+			start = end;//update start to next block
+			end+=sqrt(n);//update end to next block
+		
+			//if current end value is bigger then array size
+			//assign end to the last position of the array
+			if(start>=n)
+				return -1;
+		}
+			//do linear search
+		for(int i=start; i<=end; i++)
+		{
+			if(arr[i]==x)//element found, return index
+				return i;
+		}
+		return -1;//not found
+	}
+	int jump_search_float(float arr[], float x, int n)
+	{
+		int start=0;//the block start
+		int end=sqrt(n);//the block end, block jump size
+	
+		//check if the target is in the range of blocks
+		//if yes, the while loop will stop
+		//then do linear search in the block
+		while(arr[end]<x && end<n)
+		{
+			start = end;//update start to next block
+			end+=sqrt(n);//update end to next block
+		
+			//if current end value is bigger then array size
+			//assign end to the last position of the array
+			if(start>=n)
+				return -1;
+		}
+		//do linear search
+		for(int i=start; i<=end; i++)
+		{
+			if(arr[i]==x)//element found, return index
+				return i;
+		}
+			return -1;//not found
+	}
+	void jump_display(int result)
+	{
+		cout<<"The result :"<<endl;
+		cout<<id[result]<<endl<<name[result]<<endl;
+	}
+};	
 int main()
 {
     string i[] = { "1", "2", "3", "4" };
     string j[] = { "ming", "yong", "leong", "elysa" };
     float g[] = { 1.2, 1.3, 1.4, 1.5 };
-    string course[] = { "Diploma in IT", "Diploma in IT", "Diploma in IT", "Diploma in IT" };
+    string course[] = { "FIST", "FIST", "FOB", "FOB" };
     string timee[] = { "12-2-2024", "14-12-2023", "22-5-2024", "27-6-2024" };
 
     int size = sizeof(i) / sizeof(i[0]);
