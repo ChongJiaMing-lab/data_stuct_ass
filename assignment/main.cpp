@@ -21,7 +21,8 @@ tm getTime(string time)
     return time_struct;
 }
 
-struct Node {
+struct Node 
+{
     string name, id, course;
     float gpa;
     Node* next;
@@ -87,7 +88,7 @@ public:
 		    }
 		    case 2: 
 			{
-				search_students();
+                search_students(id, name, gpa, course, time);
 		        break;
 		    }
 		    case 3: 
@@ -189,7 +190,7 @@ public:
         }
     }
 
-    void search_students()//Elysa
+    void search_students(string id[], string name[], float g[], string course[], string time[])//Elysa
     {
     	system("cls");
         int search_choice;
@@ -197,133 +198,131 @@ public:
         cout << "1. ID" << endl;
         cout << "2. Name" << endl;
         cout << "3. GPA" << endl;
-        cout << "4. Join Time" << endl;
+        cout << "4. Course" << endl;
+        cout << "5. Join Time" << endl;
         cout << ">>>>>";
         cin >> search_choice;
     	cout << endl;
 
 
-        switch (search_choice)
-        {
-        case 1: 
+        int index = -1; 
+
+        switch (search_choice) 
 		{
-            string search_id;
-            cout<<"-----------------------"<<endl;
-            cout<<"     Search By ID      "<<endl;
-            cout<<"-----------------------"<<endl;
-            cout << "Enter ID: ";
-            cin >> search_id;
-            search_by_id(search_id);
-            break;
+            case 1: 
+			{
+                string search_id;
+                cout << "-----------------------" << endl;
+                cout << "     Search By ID      " << endl;
+                cout << "-----------------------" << endl;
+                cout << "Enter ID: ";
+                cin >> search_id;
+                index = Search_String(id, size, search_id);
+                break;
+            }
+            case 2: 
+			{
+                string search_name;
+                cout << "-----------------------" << endl;
+                cout << "     Search By Name      " << endl;
+                cout << "-----------------------" << endl;
+                cout << "Enter Name: ";
+                cin >> search_name;
+                index = Search_String(name, size, search_name);
+                break;
+            }
+            case 3: 
+			{
+                float search_gpa;
+                cout << "-----------------------" << endl;
+                cout << "     Search By GPA      " << endl;
+                cout << "-----------------------" << endl;
+                cout << "Enter GPA: ";
+                cin >> search_gpa;
+                index = Search_Float(g, size, search_gpa);
+                break;
+            }
+            case 4: 
+			{
+                string search_course;
+                cout << "-----------------------" << endl;
+                cout << "  Search By Course      " << endl;
+                cout << "-----------------------" << endl;
+                cout << "Enter course: ";
+                cin >> search_course;
+                index = Search_String(course, size, search_course);
+                break;
+            }
+            case 5: 
+			{
+                string search_time;
+                cout << "-----------------------" << endl;
+                cout << "  Search By Join Time      " << endl;
+                cout << "-----------------------" << endl;
+                cout << "Enter Join Time (dd-mm-yyyy): ";
+                cin >> search_time;
+                index = Search_String(time, size, search_time);
+                break;
+            }
         }
-        case 2: 
+        
+        if (index != -1) 
 		{
-            string search_name;
-            cout<<"-----------------------"<<endl;
-            cout<<"     Search By Name      "<<endl;
-            cout<<"-----------------------"<<endl;
-            cout << "Enter Name: ";
-            cin >> search_name;
-            search_by_name(search_name);
-            break;
-        }
-        case 3: 
+			system("cls");
+			cout << "Student found!" << endl;
+            display_student(index, id, name, g, course, time);
+        } 
+		else 
 		{
-            float search_gpa;
-            cout<<"-----------------------"<<endl;
-            cout<<"     Search By GPA      "<<endl;
-            cout<<"-----------------------"<<endl;
-            cout << "Enter GPA: ";
-            cin >> search_gpa;
-            search_by_gpa(search_gpa);
-            break;
+            cout << "Student not found!" << endl;
         }
-        case 4: 
+    }
+   	
+	    int Search_String(string A[], int size, string key) //Elysa
+		{ 
+	        int left = 0;
+	        int right = size - 1;
+	
+	        while (left <= right) 
+			{
+	            int mid = left + (right - left) / 2;
+	
+	            if (A[mid] == key)
+	                return mid;
+	            else if (A[mid] < key)
+	                left = mid + 1;
+	            else
+	                right = mid - 1;
+	        }
+	        return -1;
+	    }
+
+    int Search_Float(float A[], int size, float key) //Elysa
+	{ 
+        int left = 0;
+        int right = size - 1;
+
+        while (left <= right) 
 		{
-            string search_time;
-            cout<<"-----------------------"<<endl;
-            cout<<"  Search By Join Time      "<<endl;
-            cout<<"-----------------------"<<endl;
-            cout << "Enter Join Time (dd-mm-yyyy): ";
-            cin >> search_time;
-            search_by_time(search_time);
-            break;
+            int mid = left + (right - left) / 2;
+
+            if (A[mid] == key)
+                return mid;
+            else if (A[mid] < key)
+                left = mid + 1;
+            else
+                right = mid - 1;
         }
-        }
+        return -1;
     }
 
-    void search_by_id(string search_id)//Elysa
-    {
-        Node* current = head;
-        while (current)
-        {
-            if (current->id == search_id)
-            {
-                display_student(current);
-                return;
-            }
-            current = current->next;
-        }
-        cout << "Student not found!" << endl;
-    }
-
-    void search_by_name(string search_name)//Elysa
-    {
-        Node* current = head;
-        while (current)
-        {
-            if (current->name == search_name)
-            {
-                display_student(current);
-                return;
-            }
-            current = current->next;
-        }
-        cout << "Student not found!" << endl;
-    }
-
-    void search_by_gpa(float search_gpa)//Elysa
-    {
-        Node* current = head;
-        while (current)
-        {
-            if (current->gpa == search_gpa)
-            {
-                display_student(current);
-                return;
-            }
-            current = current->next;
-        }
-        cout << "Student not found!" << endl;
-    }
-
-    void search_by_time(string search_time)//Elysa
-    {
-        tm search_tm = getTime(search_time);
-        Node* current = head;
-        while (current)
-        {
-            if (current->time.tm_year == search_tm.tm_year &&
-                current->time.tm_mon == search_tm.tm_mon &&
-                current->time.tm_mday == search_tm.tm_mday)
-            {
-                display_student(current);
-                return;
-            }
-            current = current->next;
-        }
-        cout << "Student not found!" << endl;
-    }
-
-    void display_student(Node* student)//Elysa
-    {
-    	system("cls");
-    	cout<<"Student Found!"<<endl;
-        cout << "\nStudent id: " << student->id <<
-            "\nStudent Name: " << student->name <<
-            "\nStudent GPA: " << student->gpa <<
-            "\nCourse: " << student->course <<
-            "\nJoin Time: " << student->time.tm_mday << "-" << student->time.tm_mon + 1 << "-" << student->time.tm_year + 1900 << endl << endl;
+    void display_student(int index, string id[], string name[], float g[], string course[], string time[]) 
+	{
+        cout << "Student ID: " << id[index] << endl;
+        cout << "Student Name: " << name[index] << endl;
+        cout << "Student GPA: " << g[index] << endl;
+        cout << "Course: " << course[index] << endl;
+        cout << "Join Time: " << time[index] << endl;
     }
 };
 

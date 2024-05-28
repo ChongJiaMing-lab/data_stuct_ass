@@ -1,63 +1,45 @@
 #include <iostream>
+
 using namespace std;
 
-// Input: Indices Range [l ... r)
-// Invariant: A[l] <= key and A[r] > key
-int GetRightPosition(int A[], int l, int r, int key)
+// Binary search function for integer arrays
+int BinarySearch(int A[], int size, int key) 
 {
-    int m;
+    int left = 0;
+    int right = size - 1;
 
-    while( r - l > 1 )
-    {
-        m = l + (r - l)/2;
+    while (left <= right) 
+	{
+        int mid = left + (right - left) / 2;
 
-        if( A[m] <= key )
-            l = m;
+        if (A[mid] == key)
+            return mid;
+        else if (A[mid] < key)
+            left = mid + 1;
         else
-            r = m;
+            right = mid - 1;
     }
 
-    return l;
+    // If the key is not found, return -1
+    return -1;
 }
 
-// Input: Indices Range (l ... r]
-// Invariant: A[r] >= key and A[l] > key
-int GetLeftPosition(int A[], int l, int r, int key)
+int main() 
 {
-    int m;
-
-    while( r - l > 1 )
-    {
-        m = l + (r - l)/2;
-
-        if( A[m] >= key )
-            r = m;
-        else
-            l = m;
+    int numbers[] = {1, 3, 5, 7, 9, 11, 13, 15};
+    int key = 7;
+    int size = sizeof(numbers) / sizeof(numbers[0]);
+    int index = BinarySearch(numbers, size, key);
+    
+    if (index != -1) 
+	{
+        cout << "Key found at index: " << index << endl;
+    } 
+	else 
+	{
+        cout << "Key not found" << endl;
     }
-
-    return r;
-}
-
-int CountOccurrences(int A[], int size, int key)
-{
-    // Observe boundary conditions
-    int left = GetLeftPosition(A, -1, size-1, key);
-    int right = GetRightPosition(A, 0, size, key);
-
-    // What if the element doesn't exists in the array?
-    // The checks helps to trace that element exists
-    return (A[left] == key && key == A[right])?
-           (right - left + 1) : 0;
-}
-
-int main()
-{
-    int A[] = {1, 1, 2, 3, 3, 3, 3, 3, 4, 4, 5};
-    int size = sizeof(A) / sizeof(A[0]);
-    int key = 3;
-
-    cout << "Number of occurances of " << key << ": " << CountOccurrences(A, size, key) <<endl;
 
     return 0;
 }
+
