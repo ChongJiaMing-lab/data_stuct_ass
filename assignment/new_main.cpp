@@ -11,24 +11,9 @@ struct Student
 {
 	string id, name;
 	float gpa;
-	string course,time;
+	string course;
+	int date,mon,year;
 };
-
-tm getTime(string time)
-{
-    char d;
-    int day, month, year;
-    tm time_struct;
-
-    istringstream iss(time);
-    iss >> day >> d >> month >> d >> year;
-
-    time_struct.tm_year = year - 1900; // Years since 1900
-    time_struct.tm_mon = month - 1;    // Months are 0-based
-    time_struct.tm_mday = day;
-
-    return time_struct;
-}
 
 class Main
 {
@@ -130,7 +115,8 @@ class Main
 		            <<setw(10)<<student[i].name
 		            <<setw(10)<<student[i].gpa
 		            <<setw(10)<<student[i].course 
-					<< endl;
+					<<setw(10)<<student[i].date<<"-"<<student[i].mon<<"-"<<student[i].year
+					<<endl;
 		    }
 		}
 	    void add_students()
@@ -151,8 +137,13 @@ class Main
 	            cout << "Course: ";
 	            cin.ignore();
 	            getline(cin, new_s[i].course);
-	            cout << "Join Time: ";
-	            cin >> new_s[i].time;
+	            cout << "Join Time: "<<endl;
+				cout<<"Date: ";
+	            cin >> new_s[i].date;
+				cout<<"Month: ";
+	            cin >> new_s[i].mon;
+				cout<<"Year: ";
+	            cin >> new_s[i].year;
 	        }
 	        add_data(new_s, addnum);
 	    }
@@ -459,14 +450,14 @@ int main()
 {
 	Student s[] = 
     {
-        {"1", "ming", 1.2, "FIST", "12-2-2024"},
-        {"2", "yong", 1.3, "FIST", "14-12-2023"},
-        {"3", "leong", 1.4, "FOB", "22-5-2024"},
-        {"4", "elysa", 1.5, "FOB", "27-6-2024"},
-        {"5", "m5", 1.6, "FET", "2-6-2024"},
-        {"6", "m6", 1.7, "FET", "21-6-2024"},
-        {"7", "m7", 1.8, "FET", "12-6-2024"},
-        {"8", "m8", 1.9, "FIST", "13-6-2024"}
+        {"1", "ming", 1.2, "FIST", "12","2","2024"},
+        {"2", "yong", 1.3, "FIST", "14","12","2023"},
+        {"3", "leong", 1.4, "FOB", "22","5","2024"},
+        {"4", "elysa", 1.5, "FOB", "27","6","2024"},
+        {"5", "m5", 1.6, "FET", "2","6","2024"},
+        {"6", "m6", 1.7, "FET", "21","6","2024"},
+        {"7", "m7", 1.8, "FET", "12","6","2024"},
+        {"8", "m8", 1.9, "FIST", "13","6","2024"}
     };
 
     int size = sizeof(s) / sizeof(s[0]);
