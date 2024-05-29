@@ -115,7 +115,7 @@ class Main
 		            <<setw(10)<<student[i].name
 		            <<setw(10)<<student[i].gpa
 		            <<setw(10)<<student[i].course 
-					<<setw(10)<<student[i].date<<"-"<<student[i].mon<<"-"<<student[i].year
+					<<student[i].date<<"-"<<student[i].mon<<"-"<<student[i].year
 					<<endl;
 		    }
 		}
@@ -125,9 +125,9 @@ class Main
 	        cout << "How many students you want to add? ";
 	        cin >> addnum;
 	        Student new_s[addnum];
+	        cout << "Enter new student information" << endl << endl;
 	        for (int i = 0; i < addnum; i++)
 	        {
-	            cout << "Enter new student information" << endl << endl;
 	            cout << "ID: ";
 	            cin >> new_s[i].id;
 	            cout << "Name: ";
@@ -304,8 +304,7 @@ class Main
 	    cout<<"1. ID"<<endl;
 	    cout<<"2. Name"<<endl;
 	    cout<<"3. GPA"<<endl;
-//	    cout<<"4. Course"<<endl;
-	    cout<<"5. Join Time"<<endl;
+	    cout<<"4. Join Time"<<endl;
 	    cout<<">>>>>";
 	    cin>>schoice;
 	        
@@ -324,10 +323,6 @@ class Main
 				break;
 			}
 			case 4:{
-//	           	jump_course();
-				break;
-			} 
-			case 5:{
 //	           	jump_time();
 				break;
 			}
@@ -343,7 +338,7 @@ class Main
 		string j_id;
 	   	cout<<"Enter the id that you want to search : ";
 	    cin>>j_id;
-	    int j_index = jump_search_string(arr_id, j_id);
+	    int j_index = jump_search_string(arr_id, j_id, size);
 	    
 	    if(j_index != -1)
 	    	jump_display(j_index);
@@ -359,7 +354,7 @@ class Main
 		float j_gpa;
 	   	cout<<"Enter the gpa that you want to search : ";
 	    cin>>j_gpa;
-	    int j_index = jump_search_float(arr_gpa, j_gpa);
+	    int j_index = jump_search_float(arr_gpa, j_gpa, size);
 	    if(j_index != -1)
 	    	jump_display(j_index);
 	    else
@@ -377,16 +372,15 @@ class Main
 	   	cout<<"Enter the name that you want to search : ";
 	    cin>>j_name;
 	    
-	    int j_index = jump_search_string(arr_name, j_name);
+	    int j_index = jump_search_string(arr_name, j_name, size);
 	    if(j_index != -1)
 	    	jump_display(j_index);
 	    else
 	    	cout<<"The student not found"<<endl;
 	}
 	
-	int jump_search_string(string *arr, string x)
+	int jump_search_string(string *arr, string x, int n)
 	{
-		int n = size;
 		int start=0;//the block start
 		int end=sqrt(n);//the block end, block jump size
 	
@@ -400,8 +394,8 @@ class Main
 		
 			//if current end value is bigger then array size
 			//assign end to the last position of the array
-			if(start>=n)
-				return -1;
+			if(end > n-1)
+				end = n-1;
 		}
 			//do linear search
 		for(int i=start; i<=end; i++)
@@ -412,9 +406,8 @@ class Main
 		return -1;//not found
 	}
 	
-	int jump_search_float(float *arr, float x)
+	int jump_search_float(float *arr, float x, int n)
 	{
-		int n = size;
 		int start=0;//the block start 
 		int end=sqrt(n);//the block end, block jump size
 	
@@ -450,14 +443,14 @@ int main()
 {
 	Student s[] = 
     {
-        {"1", "ming", 1.2, "FIST", "12","2","2024"},
-        {"2", "yong", 1.3, "FIST", "14","12","2023"},
-        {"3", "leong", 1.4, "FOB", "22","5","2024"},
-        {"4", "elysa", 1.5, "FOB", "27","6","2024"},
-        {"5", "m5", 1.6, "FET", "2","6","2024"},
-        {"6", "m6", 1.7, "FET", "21","6","2024"},
-        {"7", "m7", 1.8, "FET", "12","6","2024"},
-        {"8", "m8", 1.9, "FIST", "13","6","2024"}
+        {"1", "a", 1.2, "FIST", 12,2,2024},
+        {"2", "b", 1.3, "FIST", 14,12,2023},
+        {"3", "c", 1.4, "FOB", 22,5,2024},
+        {"4", "d", 1.5, "FOB", 27,6,2024},
+        {"5", "e", 1.6, "FET", 2,6,2024},
+        {"6", "f", 1.7, "FET", 21,6,2024},
+        {"7", "g", 1.8, "FET", 12,6,2024},
+        {"8", "h", 1.9, "FIST", 13,6,2024}
     };
 
     int size = sizeof(s) / sizeof(s[0]);
