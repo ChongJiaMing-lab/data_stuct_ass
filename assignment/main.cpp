@@ -50,6 +50,7 @@ private:
 public:
     menu()
     {
+    	
         head = NULL;
     }
 
@@ -342,7 +343,7 @@ int main()
 
     m.main_menu();
     cout << "Do you want to continue?(1=Yes, Other=No): ";
-    cin >> choice;
+    cin >> choice; 
 
     while (choice == 1)
     {
