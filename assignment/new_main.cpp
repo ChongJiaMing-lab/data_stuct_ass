@@ -36,7 +36,7 @@ public:
         cout << "Welcome to student management system" << endl;
         cout << "----------------------------------------" << endl;
         cout << "1. View/Add students" << endl;
-        cout << "2. Set 1 - (Cocktail Sort + Ubiquitous Binary Search)" << endl;
+        cout << "2. Set 1 - (Cocktail Sort + Ubiquitous Binary Search)" << endl; //Leong
         cout << "2. Search student" << endl; // Elysa
         cout << "3. jump search" << endl;
         cout << "3. Set 2 - (Pancake Sort + Jump Search)" << endl;
@@ -47,7 +47,7 @@ public:
             students();
             break;
         case 2:
-            search_students();
+            set2menu();
             break;
         case 3:
             jump_search();
@@ -138,10 +138,11 @@ public:
         student = temp;
         size += new_size;
     }
-
+	
     void search_students() {
         system("cls");
         int search_choice;
+        
         cout << "Search by:" << endl;
         cout << "1. ID" << endl;
         cout << "2. Name" << endl;
@@ -322,8 +323,9 @@ public:
             arr_id[i] = student[i].id;
 
         string j_id;
-        cout << "Enter the id that you want to search: ";
-        cin >> j_id;
+        cin.ignore();
+        cout <<"Enter the id that you want to search: ";
+        getline(cin, j_id);
         int j_index = jump_search_string(arr_id, j_id, size);
 
         if (j_index != -1)
@@ -377,20 +379,20 @@ public:
         // check if the target is in the range of blocks
         // if yes, the while loop will stop
         // then do linear search in the block
-        while (arr[end] < x && end < n) {
+        while (arr[min(end, n)-1]<x) {
             start = end; // update start to next block
             end += sqrt(n); // update end to next block
 
             // if current end value is bigger then array size
-            // assign end to the last position of the array
-            if (end > n - 1)
-                end = n - 1;
+            // return false
+            if (start>= n)
+                return -1;
         }
         // do linear search
-        for (int i = start; i <= end; i++) {
+        for (int i = start; i <= end; i++) 
             if (arr[i] == x) // element found, return index
                 return i;
-        }
+                
         return -1; // not found
     }
 
@@ -423,7 +425,143 @@ public:
         cout << "The result :" << endl;
         cout << student[result].id << endl << student[result].name << endl;
     }
+    
+    	void printStudents(Student s[], int n) 
+	{
+		
+	    cout << left << setw(5) << "ID" << setw(15) << "Name" << setw(5) << "GPA" << setw(10) << "Course" << setw(15) << "Join Time" << endl;
+	    
+	    for (int i = 0; i < n; ++i) 
+		{
+	        cout << left << setw(5) << s[i].id << setw(15) << s[i].name << setw(5) << s[i].gpa << setw(10) << s[i].course<<s[i].date<<"-"<<s[i].mon<<"-"<<s[i].year<<endl;
+	    }
+	    cout<<endl;
+	    
+        }
+        
+        void set2menu()
+        {
+        int choi;
+        cout << "Original list of students:\n";
+		cout << "******************************\n";
+		printStudents(student,size);
+        cout << "---------------------------------------------------------------------" << endl;
+	    cout<<"1.Cocktail Sorting"<<endl;
+	    cout<<"2.Ubiquitous Binary Search"<<endl;
+	    cout<<"3.Back to previous menu"<<endl;
+	    cout << "---------------------------------------------------------------------" << endl;
+	    cin >> choi;
+
+		        switch (choi) 
+				{
+			        case 1:
+			            cocktailSort_Menu();
+			            break;
+			        case 2:
+			            search_students() ;
+			            break;
+			        case 3:
+			            return;
+			            break;
+				}
+	    
+	}
+		void cocktailSort_Menu()
+		{
+			char choi;
+			cout << "Original list of students:\n";
+			cout << "******************************\n";
+    		printStudents(student,size);
+    		
+    		
+			cout << "Select the field to sort by:\n";
+		    cout << "1. ID\n";
+		    cout << "2. Name\n";
+		    cout << "3. GPA\n";
+		    cout << "4. Join Time\n";
+		    cin >> choi;
+		    
+		    
+		    CocktailSort(student, size, choi);
+		    
+		    cout << "Sorted list of students:\n";
+	    	printStudents(student,size);
+		}
+		
+		void CocktailSort(Student s[], int n, char choi) 
+		{
+			    bool swapped = true;
+			    int start = 0;
+			    int end = n - 1;
+
+			    while (swapped) 
+				{
+			        swapped = false;
+			
+			        for (int i = start; i < end; ++i) 
+					{
+			            bool condition = false;
+			            
+				            switch (choi) 
+							{
+				                case '1': condition = s[i].id > s[i + 1].id; break;
+				                case '2': condition = s[i].name > s[i + 1].name; break;
+				                case '3': condition = s[i].gpa > s[i + 1].gpa; break;
+				                case '4': {
+                    
+						                    int date1 = s[i].year * 10000 + s[i].mon * 100 + s[i].date;
+						                    int date2 = s[i + 1].year * 10000 + s[i + 1].mon * 100 + s[i + 1].date;
+						                    condition = date1 > date2;
+						                    break;
+                					  	  }	
+				               
+				            }
+			            
+				            if (condition)
+							 {
+				                swap(s[i], s[i + 1]);
+				                swapped = true;
+				             }
+			             
+			        }
+			
+			        if (!swapped)
+			            break;
+			
+			        swapped = false;
+			        --end;
+			
+			        for (int i = end - 1; i >= start; --i)
+					 {
+			            bool condition = false;
+			            
+			            switch (choi) 
+						{
+			                case '1': condition = s[i].id > s[i + 1].id; break;
+			                case '2': condition = s[i].name > s[i + 1].name; break;
+			                case '3': condition = s[i].gpa > s[i + 1].gpa; break;
+			                case '4': {
+                    
+					                    int date1 = s[i].year * 10000 + s[i].mon * 100 + s[i].date;
+					                    int date2 = s[i + 1].year * 10000 + s[i + 1].mon * 100 + s[i + 1].date;
+					                    condition = date1 > date2;
+					                    break;
+                					  }
+			                
+			            }
+			            
+			            if (condition) 
+						{
+			                swap(s[i], s[i + 1]);
+			                swapped = true;
+			            }
+			            
+			        }
+			        ++start;
+			    }
+		}
 };
+
 
 int main() {
     Student s[] =
@@ -451,4 +589,3 @@ int main() {
     }
     return 0;
 }
-
