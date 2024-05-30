@@ -2,7 +2,7 @@
 #include<cmath>
 using namespace std;
 
-int jumpSearch(int arr[], int x, int n)
+int jumpSearch(float arr[], float x, int n)
 {
 	int start=0;//the block start
 	int end=sqrt(n);//the block end, block jump size
@@ -31,9 +31,9 @@ int jumpSearch(int arr[], int x, int n)
 
 int main()
 {
-    int arr[] = {0, 1, 1, 2, 3, 5, 8, 13, 21,
+    float arr[] = {0, 1, 1, 2, 3, 5, 8, 13, 21,
                  34, 55, 89, 144, 233, 377, 610};
-    int x;
+    float x;
     while(true)
     {
     	cout<<"\nEnter number : ";

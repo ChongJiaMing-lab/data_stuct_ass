@@ -7,202 +7,163 @@
 #include<sstream>
 using namespace std;
 
-tm getTime(string time)
+struct Student
 {
-    char d;
-    int day, month, year;
-    tm time_struct;
-
-    istringstream iss(time);
-    iss >> day >> d >> month >> d >> year;
-
-    time_struct.tm_year = year - 1900; // Years since 1900
-    time_struct.tm_mon = month - 1;    // Months are 0-based
-    time_struct.tm_mday = day;
-
-    return time_struct;
-}
-
-struct Node 
-{
-    string name, id, course;
-    float gpa;
-    Node* next;
-    tm time;
-
-    Node(string id, string name, float gpa, string course, string timer)
-    {
-        this->id = id;
-        this->name = name;
-        this->gpa = gpa;
-        this->course = course;
-        this->time = getTime(timer);
-        this->next = NULL; // Initialize next to NULL
-    }
+	string id, name;
+	float gpa;
+	string course;
+	int date,mon,year;
 };
 
-class menu
+class Main
 {
-private:
-    Node* head;
-    int choice, choice1;
-    string *id, *name, *course, *time;
-    float *gpa;
-    int size;
-public:
-    menu()
-    {
-    	
-        head = NULL;
-    }
-
-    void data(string *id, string *name, float *gpa, int size, string *course, string *time)
-    {
-        this->size = size;
-        this->id = id;
-        this->name = name;
-        this->gpa = gpa;
-        this->course = course;
-        this->time = time;
-
-        for (int z = 0; z < size; z++)
-        {
-            add_link(id[z], name[z], gpa[z], course[z], time[z]);
-        }
-    }
-
-    void main_menu()
-    {
-        cout << "----------------------------------------" << endl;
-        cout << "Welcome to student management system" << endl;
-        cout << "----------------------------------------" << endl;
-        cout << "1. View/Add students" << endl;
-        cout << "2. Set 1 - (Cocktail Sort + Ubiquitous Binary Search)" << endl;
-        cout << "2. Search student" << endl;//Elysa
-        cout<<"3. jump search"<<endl;
-        cout << "3. Set 2 - (Pancake Sort + Jump Search)" << endl;
-        cin >> choice;
-        
-        switch (choice)
-        {
-		    case 1: 
-			{
-		        students();
-		        break;
-		    }
-		    case 2: 
-			{
-                search_students(id, name, gpa, course, time);
-		        break;
-		    }
-		    case 3: 
-			{
-				jump_search();
-		        break;
-		    }
-        }
-    }
-
-    void students()
-    {
-        cout << "===========================" << endl;
-        cout << "Managing the students" << endl;
-        cout << "===========================" << endl;
-        cout << "What you want to do..." << endl;
-        cout << "1. Add new student" << endl;
-        cout << "2. View students information" << endl;
-        cout << "4. Back" << endl;
-        cout << ">>>>>";
-        cin >> choice1;
-        switch (choice1)
-        {
-	        case 1: 
-			{
-	            add_students();
-	            break;
-	        }
-	        case 2: 
-			{
-	            view_students();
-	            break;
-	        }
-	        case 3: 
-			{
-	            break;
-	        }
-	        case 4: 
-			{
-	            return;
-	            break;
-	        }
-        }
-    }
-
-    void add_link(string id, string name, float gpa, string course, string time)
-    {
-        Node* new_node = new Node(id, name, gpa, course, time);
-        if (!head)
-        {
-            head = new_node;
-            return;
-        }
-
-        Node* current = head;
-        while (current->next)
-        {
-            current = current->next;
-        }
-        current->next = new_node;
-    }
-
-	void view_students()
-	{
-	    Node* current = head;
-	    cout<<"============"<<endl<<"View students"<<endl<<"=============="<<endl<<endl;
-	    cout<<left<<setw(10)<<"ID"
-	        <<setw(10)<<"Name"
-	        <<setw(10)<<"GPA" 
-	        <<setw(10)<<"Course" 
-	        <<"Join Time"<<endl;
-	    cout<<"---------------------------------------------------------------------"<<endl;
-	    while(current)
+	private:
+	    int choice, choice1;
+	    Student *student;
+	    int size;
+	    
+	public:
+	    Main(Student *s, int size)
 	    {
-	        cout<<left<<setw(10) << current->id 
-	            <<setw(10)<<current->name 
-	            <<setw(10)<<current->gpa 
-	            <<setw(10)<<current->course 
-				<<current->time.tm_mday<<"-"<<current->time.tm_mon + 1<<"-"<<current->time.tm_year + 1900 << endl;
-	        current = current->next;
+	        this->size = size;
+	        student = new Student[size];
+	        for(int i=0; i<size; i++)
+	        {
+	        	student[i] = s[i];
+			}
 	    }
-	}
-    void add_students()
-    {
-        int addnum;
-        cout << "How many students you want to add? ";
-        cin >> addnum;
-        string add_id[addnum], n[addnum], gettime[addnum];
-        float g[addnum];
-        for (int i = 0; i < addnum; i++)
-        {
-            cout << "Enter new student information" << endl << endl;
-            cout << "ID: ";
-            cin >> add_id[i];
-            cout << "Name: ";
-            cin >> n[i];
-            cout << "GPA: ";
-            cin >> g[i];
-            cout << "Course: ";
-            cin.ignore();
-            getline(cin, course[i]);
-            cout << "Join Time: ";
-            cin >> gettime[i];
 
-            add_link(add_id[i], n[i], g[i], course[i], gettime[i]);
-        }
-    }
-
-    void search_students(string id[], string name[], float g[], string course[], string time[])//Elysa
-    {
+	    void main_menu()
+	    {
+	        cout << "----------------------------------------" << endl;
+	        cout << "Welcome to student management system" << endl;
+	        cout << "----------------------------------------" << endl;
+	        cout << "1. View/Add students" << endl;
+	        cout << "2. Set 1 - (Cocktail Sort + Ubiquitous Binary Search)" << endl;
+	        cout << "2. Search student" << endl;//Elysa
+	        cout<<"3. jump search"<<endl;
+	        cout << "3. Set 2 - (Pancake Sort + Jump Search)" << endl;
+	        cin >> choice;
+	        
+	        switch (choice)
+	        {
+			    case 1: 
+				{
+			        students();
+			        break;
+			    }
+			    case 2: 
+				{
+//					search_students();
+			        break;
+			    }
+			    case 3: 
+				{
+					jump_search();
+			        break;
+			    }
+	        }
+	    }
+	
+	    void students()
+	    {
+	        cout << "===========================" << endl;
+	        cout << "Managing the students" << endl;
+	        cout << "===========================" << endl;
+	        cout << "What you want to do..." << endl;
+	        cout << "1. Add new student" << endl;
+	        cout << "2. View students information" << endl;
+	        cout << "4. Back" << endl;
+	        cout << ">>>>>";
+	        cin >> choice1;
+	        switch (choice1)
+	        {
+		        case 1: 
+				{
+		            add_students();
+		            break;
+		        }
+		        case 2: 
+				{
+		            view_students();
+		            break;
+		        }
+		        case 3: 
+				{
+		            break;
+		        }
+		        case 4: 
+				{
+		            return;
+		            break;
+		        }
+	        }
+		}
+		
+		void view_students()
+		{
+		    cout<<"============"<<endl<<"View students"<<endl<<"=============="<<endl<<endl;
+		    cout<<left<<setw(10)<<"ID"
+		        <<setw(10)<<"Name"
+		        <<setw(10)<<"GPA" 
+		        <<setw(10)<<"Course" 
+		        <<"Join Time"<<endl;
+		    cout<<"---------------------------------------------------------------------"<<endl;
+		    for(int i=0; i<size; i++)
+		    {
+		        cout<<left<<setw(10) <<student[i].id
+		            <<setw(10)<<student[i].name
+		            <<setw(10)<<student[i].gpa
+		            <<setw(10)<<student[i].course 
+					<<student[i].date<<"-"<<student[i].mon<<"-"<<student[i].year
+					<<endl;
+		    }
+		}
+	    void add_students()
+	    {
+	        int addnum;
+	        cout << "How many students you want to add? ";
+	        cin >> addnum;
+	        Student new_s[addnum];
+	        cout << "Enter new student information" << endl << endl;
+	        for (int i = 0; i < addnum; i++)
+	        {
+	            cout << "ID: ";
+	            cin >> new_s[i].id;
+	            cout << "Name: ";
+	            cin >> new_s[i].name;
+	            cout << "GPA: ";
+	            cin >> new_s[i].gpa;
+	            cout << "Course: ";
+	            cin.ignore();
+	            getline(cin, new_s[i].course);
+	            cout << "Join Time: "<<endl;
+				cout<<"Date: ";
+	            cin >> new_s[i].date;
+				cout<<"Month: ";
+	            cin >> new_s[i].mon;
+				cout<<"Year: ";
+	            cin >> new_s[i].year;
+	        }
+	        add_data(new_s, addnum);
+	    }
+	
+		void add_data(Student *new_stu, int new_size) 
+		{
+	        Student* temp = new Student[size + new_size];
+	        for (int i = 0; i < size; i++) {
+	            temp[i] = student[i];
+	        }
+	        for (int i = 0; i < new_size; i++) {
+	            temp[size + i] = new_stu[i];
+	        }
+	        delete[] student;
+	        student = temp; 
+	        size += new_size;
+    	}
+    	
+    	void search_students(string id[], string name[], float g[], string course[], string time[])//Elysa
+    	{
     	system("cls");
         int search_choice;
         cout << "Search by:" << endl;
@@ -219,7 +180,7 @@ public:
 
         switch (search_choice) 
 		{
-            case 1: 
+            case 1:
 			{
                 string search_id;
                 cout << "-----------------------" << endl;
@@ -343,8 +304,7 @@ public:
 	    cout<<"1. ID"<<endl;
 	    cout<<"2. Name"<<endl;
 	    cout<<"3. GPA"<<endl;
-//	    cout<<"4. Course"<<endl;
-	    cout<<"5. Join Time"<<endl;
+	    cout<<"4. Join Time"<<endl;
 	    cout<<">>>>>";
 	    cin>>schoice;
 	        
@@ -363,21 +323,38 @@ public:
 				break;
 			}
 			case 4:{
-//	           	jump_course();
-				break;
-			} 
-			case 5:{
-	           	jump_time();
+//	           	jump_time();
 				break;
 			}
 	    }
 	}
+	
 	void jump_id()
 	{
+		string *arr_id = new string[size];
+		for(int i=0; i<size;i++)
+			arr_id[i] = student[i].id;
+			
 		string j_id;
 	   	cout<<"Enter the id that you want to search : ";
 	    cin>>j_id;
-	    int j_index = jump_search_string(id, j_id, size);
+	    int j_index = jump_search_string(arr_id, j_id, size);
+	    
+	    if(j_index != -1)
+	    	jump_display(j_index);
+	    else
+	    	cout<<"The student not found"<<endl;
+	}
+	void jump_gpa()
+	{
+		float *arr_gpa = new float[size];
+		for(int i=0; i<size;i++)
+			arr_gpa[i] = student[i].gpa;
+			
+		float j_gpa;
+	   	cout<<"Enter the gpa that you want to search : ";
+	    cin>>j_gpa;
+	    int j_index = jump_search_float(arr_gpa, j_gpa, size);
 	    if(j_index != -1)
 	    	jump_display(j_index);
 	    else
@@ -386,51 +363,23 @@ public:
 	
 	void jump_name()
 	{
-		string j_n;
+		string *arr_name = new string[size];
+		for(int i=0; i<size;i++)
+			arr_name[i] = student[i].name;
+			
+		string j_name;
+		fflush(stdin);
 	   	cout<<"Enter the name that you want to search : ";
-	    cin>>j_n;
-	    int j_index = jump_search_string(name, j_n, size);
+	    cin>>j_name;
+	    
+	    int j_index = jump_search_string(arr_name, j_name, size);
 	    if(j_index != -1)
 	    	jump_display(j_index);
 	    else
 	    	cout<<"The student not found"<<endl;
 	}
 	
-	void jump_gpa()
-	{
-		float j_g;
-	   	cout<<"Enter the gpa that you want to search : ";
-	    cin>>j_g;
-	    int j_index = jump_search_float(gpa, j_g, size);
-	    if(j_index != -1)
-	    	jump_display(j_index);
-	    else
-	    	cout<<"The student not found"<<endl;
-	}
-	
-//	void jump_course()
-//	{
-//		string j_c;
-//	   	cout<<"Enter the course that you want to search : ";
-//	    cin>>j_c;
-//	    int j_index = jump_search_string(course, j_c, size);
-//	    if(j_index != -1)
-//	    	jump_display(j_index);
-//	    else
-//	    	cout<<"The student not found"<<endl;
-//	}
-	void jump_time()
-	{
-		string j_t;
-	   	cout<<"Enter the join time that you want to search : ";
-	    cin>>j_t;
-	    int j_index = jump_search_string(time, j_t, size);
-	    if(j_index != -1)
-	    	jump_display(j_index);
-	    else
-	    	cout<<"The student not found"<<endl;
-	}
-	int jump_search_string(string arr[], string x, int n)
+	int jump_search_string(string *arr, string x, int n)
 	{
 		int start=0;//the block start
 		int end=sqrt(n);//the block end, block jump size
@@ -445,8 +394,8 @@ public:
 		
 			//if current end value is bigger then array size
 			//assign end to the last position of the array
-			if(start>=n)
-				return -1;
+			if(end > n-1)
+				end = n-1;
 		}
 			//do linear search
 		for(int i=start; i<=end; i++)
@@ -456,9 +405,10 @@ public:
 		}
 		return -1;//not found
 	}
-	int jump_search_float(float arr[], float x, int n)
+	
+	int jump_search_float(float *arr, float x, int n)
 	{
-		int start=0;//the block start
+		int start=0;//the block start 
 		int end=sqrt(n);//the block end, block jump size
 	
 		//check if the target is in the range of blocks
@@ -484,28 +434,31 @@ public:
 	}
 	void jump_display(int result)
 	{
+		cout<<"----------------"<<endl;
 		cout<<"The result :"<<endl;
-		cout<<id[result]<<endl<<name[result]<<endl;
+		cout<<student[result].id<<endl<<student[result].name<<endl;
 	}
 };	
 int main()
 {
-    string i[] = { "1", "2", "3", "4" };
-    string j[] = { "ming", "yong", "leong", "elysa" };
-    float g[] = { 1.2, 1.3, 1.4, 1.5 };
-    string course[] = { "FIST", "FIST", "FOB", "FOB" };
-    string timee[] = { "12-2-2024", "14-12-2023", "22-5-2024", "27-6-2024" };
+	Student s[] = 
+    {
+        {"1", "a", 1.2, "FIST", 12,2,2024},
+        {"2", "b", 1.3, "FIST", 14,12,2023},
+        {"3", "c", 1.4, "FOB", 22,5,2024},
+        {"4", "d", 1.5, "FOB", 27,6,2024},
+        {"5", "e", 1.6, "FET", 2,6,2024},
+        {"6", "f", 1.7, "FET", 21,6,2024},
+        {"7", "g", 1.8, "FET", 12,6,2024},
+        {"8", "h", 1.9, "FIST", 13,6,2024}
+    };
 
-    int size = sizeof(i) / sizeof(i[0]);
-    menu m;
+    int size = sizeof(s) / sizeof(s[0]);
+    Main m(s, size);
     int choice;
-
-    m.data(i, j, g, size, course, timee);
-
     m.main_menu();
     cout << "Do you want to continue?(1=Yes, Other=No): ";
-    cin >> choice; 
-
+    cin >> choice;
     while (choice == 1)
     {
         m.main_menu();
