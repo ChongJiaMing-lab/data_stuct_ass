@@ -37,8 +37,6 @@ public:
         cout << "----------------------------------------" << endl;
         cout << "1. View/Add students" << endl;
         cout << "2. Set 1 - (Cocktail Sort + Ubiquitous Binary Search)" << endl; //Leong
-        cout << "2. Search student" << endl; // Elysa
-        cout << "3. jump search" << endl;
         cout << "3. Set 2 - (Pancake Sort + Jump Search)" << endl;
         cin >> choice;
 
@@ -50,7 +48,7 @@ public:
             set2menu();
             break;
         case 3:
-            jump_search();
+            set3Menu();
             break;
         }
     }
@@ -121,7 +119,20 @@ public:
             cin >> new_s[i].mon;
             cout << "Year: ";
             cin >> new_s[i].year;
+
+			while(isValidDate(new_s[i].date,new_s[i].mon,new_s[i].year) == false)
+			{
+				cout<<endl<<"Invalid Datetime.\nPlease Re-enter."<<endl;
+				cout << "Join Time: " << endl;
+				cout << "Date: ";
+				cin >> new_s[i].date;
+				cout << "Month: ";
+				cin >> new_s[i].mon;
+				cout << "Year: ";
+				cin >> new_s[i].year;
+			}
         }
+		
         add_data(new_s, addnum);
         delete[] new_s;
     }
@@ -560,17 +571,198 @@ public:
 			        ++start;
 			    }
 		}
+
+	//Pancake Sort
+	void flip(Student s[],int i)
+	{
+		Student temp;
+		int start =0;
+		while(start<i)
+		{
+			temp = s[start];
+			s[start] = s[i];
+			s[i] = temp;
+			start++;
+			i--;
+		}
+	}
+
+	int findMax(Student s[],int n,int choice)
+	{
+		int m=0,i;
+		for(i=0;i<n;++i)
+		{
+			if(choice == 1)
+			{
+				if(s[i].id>s[m].id)
+				{
+					m = i;
+				}
+			}
+			else if(choice == 2)
+			{
+				if(s[i].name>s[m].name)
+				{
+					m = i;
+				}
+			}
+			else if(choice == 3)
+			{
+				if(s[i].gpa>s[m].gpa)
+				{
+					m = i;
+				}
+			}
+			else if(choice == 4)
+			{
+				if(s[i].year>s[m].year)
+				{
+					m = i;
+				}
+				else if(s[i].mon>s[m].mon && s[i].year == s[m].year)
+				{
+					m = i;	
+				}
+				else if(s[i].date>s[m].date && s[i].year == s[m].year && s[i].mon == s[m].mon)
+				{
+					m = i;
+				}
+			}
+		}
+		
+		return m;
+	}
+
+	void pancakeSort(Student s[], int n,int choice)
+	{
+
+		if(choice >0 && choice <5)
+		{
+			for(int i=n;i>1;--i)
+			{
+				int m = findMax(s,i,choice);
+				if(m != i-1)
+				{
+					flip(s,m);
+					flip(s,i-1);
+				}
+			}
+
+		}
+		else{
+			cout<<"Invalid choice"<<endl<<endl;
+		}
+
+	}
+
+	void pancakeDisplay(Student s[],int n)
+	{
+	    cout << left << setw(5) << "ID" << setw(15) << "Name" << setw(5) << "GPA" << setw(10) << "Course" << setw(15) << "Join Time" << endl;
+	    
+	    for (int i = 0; i < n; ++i) 
+		{
+	        cout << left << setw(5) << s[i].id << setw(15) << s[i].name << setw(5) << s[i].gpa << setw(10) << s[i].course<<s[i].date<<"-"<<s[i].mon<<"-"<<s[i].year<<endl;
+	    }
+	}
+
+	void pancakeMenu()
+	{
+		int choi;
+			cout << "Original list of students:\n";
+			cout << "******************************\n";
+    		printStudents(student,size);
+    		
+    		
+			cout << "Select the field to sort by:\n";
+		    cout << "1. ID\n";
+		    cout << "2. Name\n";
+		    cout << "3. GPA\n";
+		    cout << "4. Join Time\n";
+		    cin >> choi;
+		    
+		    
+		    pancakeSort(student, size, choi);
+		    
+		    cout << "Sorted list of students:\n";
+	    	pancakeDisplay(student,size);
+
+	}
+
+	int set3Menu()
+	{
+		int choi;
+		cout << "Original list of students:\n";
+		cout << "******************************\n";
+		printStudents(student,size);
+        cout << "---------------------------------------------------------------------" << endl;
+	    cout<<"1.Pancake Sorting"<<endl;
+	    cout<<"2.Jump Search"<<endl;
+	    cout<<"3.Back to previous menu"<<endl;
+	    cout << "---------------------------------------------------------------------" << endl;
+	    cin >> choi;
+
+		        switch (choi) 
+				{
+			        case 1:
+			            pancakeMenu();
+			            break;
+			        case 2:
+			            jump_search() ;
+			            break;
+			        case 3:
+						break;
+				}
+	}
+	//check validation of date time
+	bool isLeapYear(int year) {
+    // Leap year check: divisible by 4 and (not divisible by 100 or divisible by 400)
+    if (year % 4 == 0) {
+        if (year % 100 == 0) {
+            if (year % 400 == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    } else {
+        return false;
+    }
+}
+
+bool isValidDate(int day, int month, int year) {
+    // Check if year, month, and day are in valid ranges
+    if (year < 0 || month < 1 || month > 12 || day < 1) {
+        return false;
+    }
+
+    // Array of days in each month (index 0 is unused)
+    int daysInMonth[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    // Adjust for leap years
+    if (month == 2 && isLeapYear(year)) {
+        daysInMonth[2] = 29;
+    }
+
+    // Check if day is valid for the given month
+    if (day > daysInMonth[month]) {
+        return false;
+    }
+
+    return true;
+}
 };
 
 
 int main() {
     Student s[] =
     {
-        {"1", "a", 1.2, "FIST", 12, 2, 2024},
-        {"2", "b", 1.3, "FIST", 14, 12, 2023},
-        {"3", "c", 1.4, "FOB", 22, 5, 2024},
+        {"1", "a", 1.3, "FIST", 12, 2, 2024},
+        {"2", "c", 1.34, "FIST", 14, 12, 2023},
+        {"3", "b", 1.4, "FOB", 22, 5, 2024},
         {"4", "d", 1.5, "FOB", 27, 6, 2024},
-        {"5", "e", 1.6, "FET", 2, 6, 2024},
+        {"5", "e", 1.78, "FET", 2, 6, 2024},
         {"6", "f", 1.7, "FET", 21, 6, 2024},
         {"7", "g", 1.8, "FET", 12, 6, 2024},
         {"8", "h", 1.9, "FIST", 13, 6, 2024}
