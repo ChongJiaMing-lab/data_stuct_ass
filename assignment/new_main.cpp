@@ -19,10 +19,12 @@ private:
     int size;
 
 public:
-    Main(Student* s, int size) {
+    Main(Student* s, int size) 
+	{
         this->size = size;
         student = new Student[size];
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) 
+		{
             student[i] = s[i];
         }
     }
@@ -38,6 +40,7 @@ public:
         cout << "1. View/Add students" << endl;
         cout << "2. Set 1 - (Cocktail Sort + Ubiquitous Binary Search)" << endl; //Leong
         cout << "3. Set 2 - (Pancake Sort + Jump Search)" << endl;
+        cout<<"4. Exit"<<endl;
         cin >> choice;
 
         switch (choice) {
@@ -50,17 +53,20 @@ public:
         case 3:
             set3Menu();
             break;
+        case 4:
+        	exit(0);
         }
     }
 
-    void students() {
+    void students() 
+	{
         cout << "===========================" << endl;
         cout << "Managing the students" << endl;
         cout << "===========================" << endl;
         cout << "What you want to do..." << endl;
         cout << "1. Add new student" << endl;
         cout << "2. View students information" << endl;
-        cout << "4. Back" << endl;
+        cout << "3. Back" << endl;
         cout << ">>>>>";
         cin >> choice1;
         switch (choice1) {
@@ -71,9 +77,7 @@ public:
             view_students();
             break;
         case 3:
-            break;
-        case 4:
-            return;
+        	return;
             break;
         }
     }
@@ -137,7 +141,8 @@ public:
         delete[] new_s;
     }
 
-    void add_data(Student* new_stu, int new_size) {
+    void add_data(Student* new_stu, int new_size) 
+	{
         Student* temp = new Student[size + new_size];
         for (int i = 0; i < size; i++) {
             temp[i] = student[i];
@@ -158,8 +163,6 @@ public:
         cout << "1. ID" << endl;
         cout << "2. Name" << endl;
         cout << "3. GPA" << endl;
-        cout << "4. Course" << endl;
-        cout << "5. Join Time" << endl;
         cout << ">>>>>";
         cin >> search_choice;
         cout << endl;
@@ -210,39 +213,6 @@ public:
             }
             index = Search_Float(gpaArray, size, search_gpa);
             delete[] gpaArray;
-            break;
-        }
-        case 4: {
-            string search_course;
-            cout << "-----------------------" << endl;
-            cout << "  Search By Course      " << endl;
-            cout << "-----------------------" << endl;
-            cout << "Enter Course: ";
-            cin.ignore();
-            getline(cin, search_course);
-            string* courseArray = new string[size];
-            for (int i = 0; i < size; i++) {
-                courseArray[i] = student[i].course;
-            }
-            index = Search_String(courseArray, size, search_course);
-            delete[] courseArray;
-            break;
-        }
-        case 5: {
-            string search_time;
-            cout << "-----------------------" << endl;
-            cout << "  Search By Join Time   " << endl;
-            cout << "-----------------------" << endl;
-            cout << "Enter Join Time (dd-mm-yyyy): ";
-            cin >> search_time;
-            string* timeArray = new string[size];
-            for (int i = 0; i < size; i++) {
-                ostringstream ss;
-                ss << student[i].date << "-" << student[i].mon << "-" << student[i].year;
-                timeArray[i] = ss.str();
-            }
-            index = Search_String(timeArray, size, search_time);
-            delete[] timeArray;
             break;
         }
         }
@@ -301,14 +271,13 @@ public:
         cout << "Join Time: " << student[index].date << "-" << student[index].mon << "-" << student[index].year << endl;
     }
 
-    //jm
+    //jump search
     void jump_search() {
         int schoice;
         cout << "Search by:" << endl;
         cout << "1. ID" << endl;
         cout << "2. Name" << endl;
         cout << "3. GPA" << endl;
-        cout << "4. Join Time" << endl;
         cout << ">>>>>";
         cin >> schoice;
 
@@ -322,13 +291,13 @@ public:
         case 3:
             jump_gpa();
             break;
-        case 4:
-            // jump_time();
-            break;
         }
     }
 
-    void jump_id() {
+    void jump_id() 
+	{
+		cout<<"Search by ID:"<<endl;
+    	cout<<"--------------------"<<endl;
         string* arr_id = new string[size];
         for (int i = 0; i < size; i++)
             arr_id[i] = student[i].id;
@@ -347,24 +316,10 @@ public:
         delete[] arr_id;
     }
 
-    void jump_gpa() {
-        float* arr_gpa = new float[size];
-        for (int i = 0; i < size; i++)
-            arr_gpa[i] = student[i].gpa;
-
-        float j_gpa;
-        cout << "Enter the gpa that you want to search: ";
-        cin >> j_gpa;
-        int j_index = jump_search_float(arr_gpa, j_gpa, size);
-        if (j_index != -1)
-            jump_display(j_index);
-        else
-            cout << "The student not found" << endl;
-
-        delete[] arr_gpa;
-    }
-
-    void jump_name() {
+	void jump_name() 
+	{
+    	cout<<"Search by name:"<<endl;
+    	cout<<"--------------------"<<endl;
         string* arr_name = new string[size];
         for (int i = 0; i < size; i++)
             arr_name[i] = student[i].name;
@@ -382,8 +337,61 @@ public:
 
         delete[] arr_name;
     }
+    
+    void jump_gpa() 
+	{
+		cout<<"Search by GPA:"<<endl;
+    	cout<<"--------------------"<<endl;
+        float* arr_gpa = new float[size];
+        for (int i = 0; i < size; i++)
+            arr_gpa[i] = student[i].gpa;
 
-    int jump_search_string(string* arr, string x, int n) {
+        float j_gpa;
+        cout << "Enter the gpa that you want to search: ";
+        cin >> j_gpa;
+        int j_index = jump_search_float(arr_gpa, j_gpa, size);
+        if (j_index != -1)
+            jump_display(j_index);
+        else
+            cout << "The student not found" << endl;
+
+        delete[] arr_gpa;
+    }
+
+    void jump_time() 
+	{
+		string time;
+		string* arr_time = new string[size];
+		for (int i=0; i<size; i++) 
+		{
+			ostringstream t;
+            t<<setw(4) << setfill('0') <<student[i].year<<"-"
+             << setw(2) << setfill('0') <<student[i].mon<<"-"
+             << setw(2) << setfill('0') <<student[i].date;
+            arr_time[i] = t.str();
+        }
+        
+        for(int i=0; i<size; i++)
+        {
+        	cout<<arr_time[i]<<endl;
+		}
+    	cout<<"Search by join time:"<<endl;
+    	cout<<"--------------------"<<endl;
+    	fflush(stdin);
+        cout << "Enter the join time that you want to search: ";
+        getline(cin, time);
+
+        int j_index = jump_search_string(arr_time, time, size);
+        if (j_index != -1)
+            jump_display(j_index);
+        else
+            cout << "The student not found" << endl;
+
+        delete[] arr_time;
+    }
+
+    int jump_search_string(string* arr, string x, int n) 
+	{
         int start = 0; // the block start
         int end = sqrt(n); // the block end, block jump size
 
@@ -400,44 +408,50 @@ public:
                 return -1;
         }
         // do linear search
-        for (int i = start; i <= end; i++) 
+        for (int i = start; i <= end; i++)
+        {
             if (arr[i] == x) // element found, return index
                 return i;
+    	}
                 
         return -1; // not found
     }
 
     int jump_search_float(float* arr, float x, int n) {
-        int start = 0; // the block start 
-        int end = sqrt(n); // the block end, block jump size
+        int start = 0;
+        int end = sqrt(n);
+		
+         while (arr[min(end, n)-1]<x) 
+		 {
+            start = end; 
+            end += sqrt(n);
 
-        // check if the target is in the range of blocks
-        // if yes, the while loop will stop
-        // then do linear search in the block
-        while (arr[end] < x && end < n) {
-            start = end; // update start to next block
-            end += sqrt(n); // update end to next block
-
-            // if current end value is bigger then array size
-            // assign end to the last position of the array
             if (start >= n)
                 return -1;
         }
-        // do linear search
-        for (int i = start; i <= end; i++) {
-            if (arr[i] == x) // element found, return index
+        
+        for (int i = start; i <= end; i++) 
+		{
+            if (arr[i] == x) 
                 return i;
         }
-        return -1; // not found
+        return -1;
     }
-
-    void jump_display(int result) {
-        cout << "----------------" << endl;
-        cout << "The result :" << endl;
-        cout << student[result].id << endl << student[result].name << endl;
+	
+	
+    void jump_display(int result) 
+	{
+		cout<<"The student is found"<<endl;
+        cout<<"-------------------------"<<endl;
+        cout<<"Student Information :"<<endl;
+        cout<<"Student ID: "<<student[result].id<<endl;
+        cout<<"Student Name: "<<student[result].name<<endl;
+        cout<<"Student GPA: "<<student[result].gpa<<endl;
+        cout<<"Course: "<<student[result].course<<endl;
+        cout<<"Join Time: "<<student[result].date<<"-"<<student[result].mon<<"-"<<student[result].year<<endl;
     }
     
-    	void printStudents(Student s[], int n) 
+    void printStudents(Student s[], int n) 
 	{
 		
 	    cout << left << setw(5) << "ID" << setw(15) << "Name" << setw(5) << "GPA" << setw(10) << "Course" << setw(15) << "Join Time" << endl;
@@ -484,14 +498,12 @@ public:
 			cout << "******************************\n";
     		printStudents(student,size);
     		
-    		
 			cout << "Select the field to sort by:\n";
 		    cout << "1. ID\n";
 		    cout << "2. Name\n";
 		    cout << "3. GPA\n";
 		    cout << "4. Join Time\n";
 		    cin >> choi;
-		    
 		    
 		    CocktailSort(student, size, choi);
 		    
@@ -558,7 +570,6 @@ public:
 					                    condition = date1 > date2;
 					                    break;
                 					  }
-			                
 			            }
 			            
 			            if (condition) 
@@ -679,8 +690,7 @@ public:
 		    cout << "3. GPA\n";
 		    cout << "4. Join Time\n";
 		    cin >> choi;
-		    
-		    
+    
 		    pancakeSort(student, size, choi);
 		    
 		    cout << "Sorted list of students:\n";
@@ -729,7 +739,7 @@ public:
     } else {
         return false;
     }
-}
+}  
 
 bool isValidDate(int day, int month, int year) {
     // Check if year, month, and day are in valid ranges
@@ -758,26 +768,22 @@ bool isValidDate(int day, int month, int year) {
 int main() {
     Student s[] =
     {
-        {"1", "a", 1.3, "FIST", 12, 2, 2024},
-        {"2", "c", 1.34, "FIST", 14, 12, 2023},
-        {"3", "b", 1.4, "FOB", 22, 5, 2024},
-        {"4", "d", 1.5, "FOB", 27, 6, 2024},
-        {"5", "e", 1.78, "FET", 2, 6, 2024},
-        {"6", "f", 1.7, "FET", 21, 6, 2024},
-        {"7", "g", 1.8, "FET", 12, 6, 2024},
-        {"8", "h", 1.9, "FIST", 13, 6, 2024}
+        {"1", "a", 1.3, "FIST", 11, 6, 2024},
+        {"2", "c", 1.34, "FIST", 12, 12, 2024},
+        {"3", "b", 1.4, "FOB", 31, 6, 2024},
+        {"4", "d", 1.5, "FOB", 14, 6, 2022},
+        {"5", "e", 1.78, "FET", 5, 6, 2024},
+        {"6", "f", 1.7, "FET", 6, 6, 2024},
+        {"7", "g", 1.8, "FET", 7, 8, 2024},
+        {"8", "h", 1.9, "FIST", 5, 9, 2023}
     };
 
     int size = sizeof(s) / sizeof(s[0]);
     Main m(s, size);
     int choice;
-    m.main_menu();
-    cout << "Do you want to continue?(1=Yes, Other=No): ";
-    cin >> choice;
-    while (choice == 1) {
-        m.main_menu();
-        cout << "Do you want to continue?(1=Yes, Other=No): ";
-        cin >> choice;
-    }
+    while(true)
+    {	
+    	m.main_menu();
+	}
     return 0;
 }
