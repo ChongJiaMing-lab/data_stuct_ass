@@ -155,7 +155,8 @@ public:
         size += new_size;
     }
 	
-    void search_students() {
+    void search_students() //Elysa
+	{
         system("cls");
         int search_choice;
         
@@ -169,8 +170,11 @@ public:
 
         int index = -1;
 
-        switch (search_choice) {
-        case 1: {
+        switch (search_choice) 
+		{
+        case 1: 
+		{
+            system("cls");
             string search_id;
             cout << "-----------------------" << endl;
             cout << "     Search By ID      " << endl;
@@ -185,7 +189,9 @@ public:
             delete[] idArray;
             break;
         }
-        case 2: {
+        case 2: 
+		{
+            system("cls");
             string search_name;
             cout << "-----------------------" << endl;
             cout << "     Search By Name      " << endl;
@@ -200,7 +206,9 @@ public:
             delete[] nameArray;
             break;
         }
-        case 3: {
+        case 3: 
+		{
+			system("cls");
             float search_gpa;
             cout << "-----------------------" << endl;
             cout << "     Search By GPA      " << endl;
@@ -217,17 +225,23 @@ public:
         }
         }
 
-        if (index != -1) {
+        if (index != -1) 
+		{
             system("cls");
             cout << "Student found!" << endl;
             display_student(index);
+            system("pause");
+            system("cls");
         }
-        else {
+        else 
+		{
             cout << "Student not found!" << endl;
+            system("pause");
+            system("cls");
         }
     }
 
-    int Search_String(string A[], int size, string key) 
+    int Search_String(string A[], int size, string key) //Ubiquitous binary search with string datatype
 	{
         int left = 0;
         int right = size - 1;
@@ -246,7 +260,8 @@ public:
         return -1;
     }
 
-    int Search_Float(float A[], int size, float key) {
+    int Search_Float(float A[], int size, float key) //Ubiquitous binary search with float datatype
+	{
         int left = 0;
         int right = size - 1;
 
@@ -263,7 +278,8 @@ public:
         return -1;
     }
 
-    void display_student(int index) {
+    void display_student(int index) //Display the found data
+	{
         cout << "Student ID: " << student[index].id << endl;
         cout << "Student Name: " << student[index].name << endl;
         cout << "Student GPA: " << student[index].gpa << endl;
