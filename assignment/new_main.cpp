@@ -600,7 +600,7 @@ public:
 		}
 
 	//Pancake Sort
-	void flip(Student s[],int i)
+	void flip(Student s[],int i) // flip the data
 	{
 		Student temp;
 		int start =0;
@@ -614,33 +614,33 @@ public:
 		}
 	}
 
-	int findMax(Student s[],int n,int choice)
+	int findMax(Student s[],int n,int choice) // find the biggest data
 	{
 		int m=0,i;
 		for(i=0;i<n;++i)
 		{
-			if(choice == 1)
+			if(choice == 1)//id
 			{
 				if(s[i].id>s[m].id)
 				{
 					m = i;
 				}
 			}
-			else if(choice == 2)
+			else if(choice == 2)//name
 			{
 				if(s[i].name>s[m].name)
 				{
 					m = i;
 				}
 			}
-			else if(choice == 3)
+			else if(choice == 3)//GPA
 			{
 				if(s[i].gpa>s[m].gpa)
 				{
 					m = i;
 				}
 			}
-			else if(choice == 4)
+			else if(choice == 4)//join time
 			{
 				if(s[i].year>s[m].year)
 				{
@@ -660,7 +660,7 @@ public:
 		return m;
 	}
 
-	void pancakeSort(Student s[], int n,int choice)
+	void pancakeSort(Student s[], int n,int choice)// main program for pancake sorting
 	{
 
 		if(choice >0 && choice <5)
@@ -682,7 +682,7 @@ public:
 
 	}
 
-	void pancakeDisplay(Student s[],int n)
+	void pancakeDisplay(Student s[],int n)// to display data after sorting
 	{
 	    cout << left << setw(5) << "ID" << setw(15) << "Name" << setw(5) << "GPA" << setw(10) << "Course" << setw(15) << "Join Time" << endl;
 	    
@@ -692,7 +692,7 @@ public:
 	    }
 	}
 
-	void pancakeMenu()
+	void pancakeMenu()// menu for pancake sorting
 	{
 		int choi;
 			cout << "Original list of students:\n";
@@ -714,7 +714,7 @@ public:
 
 	}
 
-	int set3Menu()
+	int set3Menu()// menu for combination of pancake sorting and jump search
 	{
 		int choi;
 		cout << "Original list of students:\n";
