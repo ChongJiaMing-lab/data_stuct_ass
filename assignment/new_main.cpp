@@ -527,7 +527,7 @@ public:
 	    	printStudents(student,size);
 		}
 		
-		void CocktailSort(Student s[], int n, char choi) 
+		void CocktailSort(Student s[], int n, char choi) //cocktail soft
 		{
 			    bool swapped = true;
 			    int start = 0;
@@ -537,22 +537,22 @@ public:
 				{
 			        swapped = false;
 			
-			        for (int i = start; i < end; ++i) 
+			        for (int i = start; i < end; ++i) // Traverse the array from start to end
 					{
 			            bool condition = false;
 			            
 				            switch (choi) 
 							{
-				                case '1': condition = s[i].id > s[i + 1].id; break;
-				                case '2': condition = s[i].name > s[i + 1].name; break;
-				                case '3': condition = s[i].gpa > s[i + 1].gpa; break;
+				                case '1': condition = s[i].id > s[i + 1].id; break; //if choose ==1 will soft student id
+				                case '2': condition = s[i].name > s[i + 1].name; break; //if choose ==2 will soft student name
+				                case '3': condition = s[i].gpa > s[i + 1].gpa; break; //if choose ==3 will soft student gpa
 				                case '4': {
                     
 						                    int date1 = s[i].year * 10000 + s[i].mon * 100 + s[i].date;
 						                    int date2 = s[i + 1].year * 10000 + s[i + 1].mon * 100 + s[i + 1].date;
 						                    condition = date1 > date2;
 						                    break;
-                					  	  }	
+                					  	  }	//if choose ==4 will soft jointime
 				               
 				            }
 			            
@@ -564,13 +564,13 @@ public:
 			             
 			        }
 			
-			        if (!swapped)
+			        if (!swapped)   // If no elements were swapped, the array is sorted
 			            break;
 			
 			        swapped = false;
 			        --end;
-			
-			        for (int i = end - 1; i >= start; --i)
+				
+			        for (int i = end - 1; i >= start; --i) // Traverse the array from start to end
 					 {
 			            bool condition = false;
 			            
@@ -588,7 +588,7 @@ public:
                 					  }
 			            }
 			            
-			            if (condition) 
+			            if (condition) // Swap if the condition is met
 						{
 			                swap(s[i], s[i + 1]);
 			                swapped = true;
