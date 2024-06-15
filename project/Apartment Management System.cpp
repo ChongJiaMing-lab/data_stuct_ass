@@ -15,7 +15,7 @@
 using namespace std;
 
 string current_user;
-
+ 
 struct Board
 {
 	string notice;
