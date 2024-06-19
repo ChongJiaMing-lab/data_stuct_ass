@@ -1,52 +1,49 @@
-#include<iostream>
-#include<cmath>
+#include <iostream>
 using namespace std;
-
-int jumpSearch(float arr[], float x, int n)
+ 
+int jumpSearch(int arr[], int x, int n)
 {
-	int start=0;//the block start
-	int end=sqrt(n);//the block end, block jump size
-	
-	//check if the target is in the range of blocks
-	//if yes, the while loop will stop
-	//then do linear search in the block
-	while(arr[end]<x && end<n)
-		{
-			start = end;//update start to next block
-			end+=sqrt(n);//update end to next block
-	
-			//if current end value is bigger then array size
-			//assign end to the last position of the array
-			if(start>=n)
-				return -1;
-		}
-	//do linear search
-	for(int i=start; i<=end; i++)
-	{
-		if(arr[i]==x)//element found, return index
-			return i;
-	}
-	return -1;//not found
+    // Finding block size to be jumped
+    int step = sqrt(n);
+ 
+    // Finding the block where element is
+    // present (if it is present)
+    int prev = 0;
+    while (arr[min(step, n)-1] < x)
+    {
+        prev = step;
+        step += sqrt(n);
+        if (prev >= n)
+            return -1;
+    }
+ 
+    // Doing a linear search for x in block
+    // beginning with prev.
+    while (arr[prev] < x)
+    {
+        prev++;
+        // If we reached next block or end of
+        // array, element is not present.
+        if (prev == min(step, n))
+            return -1;
+    }
+    // If element is found
+    if (arr[prev] == x)
+        return prev;
+ 
+    return -1;
 }
 
 int main()
 {
-    float arr[] = {0, 1, 1, 2, 3, 5, 8, 13, 21,
-                 34, 55, 89, 144, 233, 377, 610};
-    float x;
-    while(true)
-    {
-    	cout<<"\nEnter number : ";
-    	cin>>x;
-	    int n = sizeof(arr) / sizeof(arr[0]);//get array size
-	
-	    int index = jumpSearch(arr, x, n);
-	
-	    if (index != -1)
-	        cout << "Number " << x << " is at index " << index;
-	    else
-	        cout << "Number " << x << " not exist ";
-	}
+    int arr[] = { 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610};
+    int x = 55;
+    int n = sizeof(arr) / sizeof(arr[0]);
+     
+    // Find the index of 'x' using Jump Search
+    int index = jumpSearch(arr, x, n);
+
+    // Print the index where 'x' is located
+    cout << "\nNumber " << x << " is at index " << index;
     return 0;
 }
-

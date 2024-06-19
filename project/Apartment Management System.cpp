@@ -15,7 +15,8 @@
 using namespace std;
 
 string current_user;
-
+const int MAX_OWNERS = 100;
+ 
 struct Board
 {
 	string notice;
@@ -754,39 +755,122 @@ class ixora
 			}
 			
 			 void menu();
-			 void owner_Inf()//is give the tenants to view owner information
-			 {
-			 	string owner_name, owner_ic, owner_tel_no;
-			 	system("CLS");
-   				 cout << "----------------------------" << endl << endl;
-   				 cout << "Owner Information page " << endl << endl;
-    			 cout << "----------------------------" << endl << endl;
+			int partition(string owners[], string ic[], string tel[], int low, int high) {
+    string pivot = owners[high];
+    int i = low - 1;
 
-    			 ifstream fread("owner.txt");//if cant not open file will come out failed to open
+    for (int j = low; j < high; j++) {
+        if (owners[j] < pivot) {
+            i++;
+            // Swap owners[i] and owners[j]
+            string temp = owners[i];
+            owners[i] = owners[j];
+            owners[j] = temp;
+            
+            // Swap ic[i] and ic[j]
+            temp = ic[i];
+            ic[i] = ic[j];
+            ic[j] = temp;
 
-   				 if (!fread.is_open()) {
-       			 cout << "Failed to open the owner.txt file!" << endl;
-       			 return;
-  				}
+            // Swap tel[i] and tel[j]
+            temp = tel[i];
+            tel[i] = tel[j];
+            tel[j] = temp;
+        }
+    }
+    // Swap owners[i + 1] and owners[high]
+    string temp = owners[i + 1];
+    owners[i + 1] = owners[high];
+    owners[high] = temp;
+    
+    // Swap ic[i + 1] and ic[high]
+    temp = ic[i + 1];
+    ic[i + 1] = ic[high];
+    ic[high] = temp;
 
-    			string line;
-	        	while (getline(fread, owner_name)) 
-				{
-					//the getline is the spaces can be excluded
-		            getline(fread, owner_ic);
-		            getline(fread, owner_tel_no);
-		            getline(fread, line);
-		            getline(fread, line);
-		            getline(fread, line);
-				//output the information
-        		 cout << "Name : " << owner_name << endl;
-        		 cout << "IC : " << owner_ic << endl;
-                 cout << "Telephone Number : " << owner_tel_no << endl;
-        		 cout << "--------------------------------" << endl;
-    			}
+    // Swap tel[i + 1] and tel[high]
+    temp = tel[i + 1];
+    tel[i + 1] = tel[high];
+    tel[high] = temp;
 
-    			fread.close();	
-			 }
+    return i + 1;
+}
+
+// Quick Sort recursive function
+void quickSort(string owners[], string ic[], string tel[], int low, int high) {
+    if (low < high) {
+        int pi = partition(owners, ic, tel, low, high);
+        quickSort(owners, ic, tel, low, pi - 1);
+        quickSort(owners, ic, tel, pi + 1, high);
+    }
+}
+
+void owner_Inf() // gives the tenants view of owner information
+{
+    string owner_names[MAX_OWNERS];
+    string owner_ics[MAX_OWNERS];
+    string owner_tels[MAX_OWNERS];
+    string owner_units[MAX_OWNERS];
+    int owner_count = 0;
+    string user_units[MAX_OWNERS];
+    int user_count = 0;
+    string owner_name, owner_ic, owner_tel_no, owner_unit;
+    string user_unit, user_name, user_ic, user_tel_no;
+    system("CLS");
+    cout << "----------------------------" << endl << endl;
+    cout << "Owner Information page " << endl << endl;
+    cout << "----------------------------" << endl << endl;
+
+    ifstream fread_owner("owner.txt"); // if can't open file, it will display a failure message
+    ifstream fread_user("UserInformation.txt"); // if can't open file, it will display a failure message
+
+    if (!fread_owner.is_open()) {
+        cout << "Failed to open the owner.txt file!" << endl;
+        return;
+    }
+
+    if (!fread_user.is_open()) {
+        cout << "Failed to open the UserInformation.txt file!" << endl;
+        return;
+    }
+
+    // Read owner details from the file, including unit number
+    while (fread_owner >> owner_name >> owner_ic >> owner_tel_no >> owner_unit && owner_count < MAX_OWNERS) {
+        owner_names[owner_count] = owner_name;
+        owner_ics[owner_count] = owner_ic;
+        owner_tels[owner_count] = owner_tel_no;
+        owner_units[owner_count] = owner_unit;
+        owner_count++;
+    }
+    fread_owner.close();
+
+    // Read user booking information from the file
+    while (fread_user >> user_name >> user_ic >> user_tel_no >> user_unit && user_count < MAX_OWNERS) {
+        user_units[user_count] = user_unit;
+        user_count++;
+    }
+    fread_user.close();
+
+    // Sort owner names using Quick Sort
+    quickSort(owner_names, owner_ics, owner_tels, 0, owner_count - 1);
+
+    // Display sorted owner details for matching units
+    for (int i = 0; i < owner_count; i++) {
+        for (int j = 0; j < user_count; j++) {
+            if (owner_units[i] == user_units[j]) 
+			{
+                cout << "Name : " << owner_names[i] << endl;
+                cout << "IC : " << owner_ics[i] << endl;
+                cout << "Telephone Number : " << owner_tels[i] << endl;
+                cout << "--------------------------------" << endl;
+            }
+			else
+			{
+				cout<<"Owner Information not found!!"<<endl;
+			}
+        }
+    }
+}
 			 
 	  		 void feedback()//to give feedback
 	  		 {
@@ -1674,7 +1758,7 @@ int main()
 	else if (p == 2)
         {
             system("CLS");
-            //owner_login();
+            owner_login();
             owner_menu();
         }
 	else if(p == 3)
@@ -2047,7 +2131,7 @@ void tenants_login()
 	
 	for(int q=0; q<3; q++)
 	{i=0;
-		cout<<"\nEnter the tenant username: ";
+		cout<<"\nEnter the tenant ic: ";
 		fflush(stdin);
 		getline(cin, t_name);
 		cout<<"Enter the tenant password: ";
@@ -2060,17 +2144,17 @@ void tenants_login()
 	if(fread.is_open())
 	{
     while (fread >> storedUsername >> storedPassword)
-		 {
-		 	if (storedUsername == t_name && storedPassword == password)
-			{
-               	sleep(2);
-                cout<<"Success to login "<<endl;
-                cout<<"Welcome Back ,"<<storedUsername<<endl;
-                sleep(2);
-                system("cls");
-                return;
-    		}
-        }
+	 {
+	 	if (storedUsername == t_name && storedPassword == password)
+		{
+           	sleep(2);
+            cout<<"Success to login "<<endl;
+            cout<<"Welcome Back ,"<<storedUsername<<endl;
+            sleep(2);
+            system("cls");
+            return;
+		}
+    }
     fread.close();
     h--;
     	cout << "\nLogin failed. Incorrect username or password.\n";

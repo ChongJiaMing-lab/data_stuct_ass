@@ -155,7 +155,8 @@ public:
         size += new_size;
     }
 	
-    void search_students() {
+    void search_students() //Elysa
+	{
         system("cls");
         int search_choice;
         
@@ -169,8 +170,11 @@ public:
 
         int index = -1;
 
-        switch (search_choice) {
-        case 1: {
+        switch (search_choice) 
+		{
+        case 1: 
+		{
+            system("cls");
             string search_id;
             cout << "-----------------------" << endl;
             cout << "     Search By ID      " << endl;
@@ -185,7 +189,9 @@ public:
             delete[] idArray;
             break;
         }
-        case 2: {
+        case 2: 
+		{
+            system("cls");
             string search_name;
             cout << "-----------------------" << endl;
             cout << "     Search By Name      " << endl;
@@ -200,7 +206,9 @@ public:
             delete[] nameArray;
             break;
         }
-        case 3: {
+        case 3: 
+		{
+			system("cls");
             float search_gpa;
             cout << "-----------------------" << endl;
             cout << "     Search By GPA      " << endl;
@@ -217,17 +225,23 @@ public:
         }
         }
 
-        if (index != -1) {
+        if (index != -1) 
+		{
             system("cls");
             cout << "Student found!" << endl;
             display_student(index);
+            system("pause");
+            system("cls");
         }
-        else {
+        else 
+		{
             cout << "Student not found!" << endl;
+            system("pause");
+            system("cls");
         }
     }
 
-    int Search_String(string A[], int size, string key) 
+    int Search_String(string A[], int size, string key) //Ubiquitous binary search with string datatype
 	{
         int left = 0;
         int right = size - 1;
@@ -246,7 +260,8 @@ public:
         return -1;
     }
 
-    int Search_Float(float A[], int size, float key) {
+    int Search_Float(float A[], int size, float key) //Ubiquitous binary search with float datatype
+	{
         int left = 0;
         int right = size - 1;
 
@@ -263,7 +278,8 @@ public:
         return -1;
     }
 
-    void display_student(int index) {
+    void display_student(int index) //Display the found data
+	{
         cout << "Student ID: " << student[index].id << endl;
         cout << "Student Name: " << student[index].name << endl;
         cout << "Student GPA: " << student[index].gpa << endl;
@@ -511,7 +527,7 @@ public:
 	    	printStudents(student,size);
 		}
 		
-		void CocktailSort(Student s[], int n, char choi) 
+		void CocktailSort(Student s[], int n, char choi) //cocktail soft
 		{
 			    bool swapped = true;
 			    int start = 0;
@@ -521,22 +537,22 @@ public:
 				{
 			        swapped = false;
 			
-			        for (int i = start; i < end; ++i) 
+			        for (int i = start; i < end; ++i) // Traverse the array from start to end
 					{
 			            bool condition = false;
 			            
 				            switch (choi) 
 							{
-				                case '1': condition = s[i].id > s[i + 1].id; break;
-				                case '2': condition = s[i].name > s[i + 1].name; break;
-				                case '3': condition = s[i].gpa > s[i + 1].gpa; break;
+				                case '1': condition = s[i].id > s[i + 1].id; break; //if choose ==1 will soft student id
+				                case '2': condition = s[i].name > s[i + 1].name; break; //if choose ==2 will soft student name
+				                case '3': condition = s[i].gpa > s[i + 1].gpa; break; //if choose ==3 will soft student gpa
 				                case '4': {
                     
 						                    int date1 = s[i].year * 10000 + s[i].mon * 100 + s[i].date;
 						                    int date2 = s[i + 1].year * 10000 + s[i + 1].mon * 100 + s[i + 1].date;
 						                    condition = date1 > date2;
 						                    break;
-                					  	  }	
+                					  	  }	//if choose ==4 will soft jointime
 				               
 				            }
 			            
@@ -548,13 +564,13 @@ public:
 			             
 			        }
 			
-			        if (!swapped)
+			        if (!swapped)   // If no elements were swapped, the array is sorted
 			            break;
 			
 			        swapped = false;
 			        --end;
-			
-			        for (int i = end - 1; i >= start; --i)
+				
+			        for (int i = end - 1; i >= start; --i) // Traverse the array from start to end
 					 {
 			            bool condition = false;
 			            
@@ -572,7 +588,7 @@ public:
                 					  }
 			            }
 			            
-			            if (condition) 
+			            if (condition) // Swap if the condition is met
 						{
 			                swap(s[i], s[i + 1]);
 			                swapped = true;
@@ -584,7 +600,7 @@ public:
 		}
 
 	//Pancake Sort
-	void flip(Student s[],int i)
+	void flip(Student s[],int i) // flip the data
 	{
 		Student temp;
 		int start =0;
@@ -598,33 +614,33 @@ public:
 		}
 	}
 
-	int findMax(Student s[],int n,int choice)
+	int findMax(Student s[],int n,int choice) // find the biggest data
 	{
 		int m=0,i;
 		for(i=0;i<n;++i)
 		{
-			if(choice == 1)
+			if(choice == 1)//id
 			{
 				if(s[i].id>s[m].id)
 				{
 					m = i;
 				}
 			}
-			else if(choice == 2)
+			else if(choice == 2)//name
 			{
 				if(s[i].name>s[m].name)
 				{
 					m = i;
 				}
 			}
-			else if(choice == 3)
+			else if(choice == 3)//GPA
 			{
 				if(s[i].gpa>s[m].gpa)
 				{
 					m = i;
 				}
 			}
-			else if(choice == 4)
+			else if(choice == 4)//join time
 			{
 				if(s[i].year>s[m].year)
 				{
@@ -644,7 +660,7 @@ public:
 		return m;
 	}
 
-	void pancakeSort(Student s[], int n,int choice)
+	void pancakeSort(Student s[], int n,int choice)// main program for pancake sorting
 	{
 
 		if(choice >0 && choice <5)
@@ -666,7 +682,7 @@ public:
 
 	}
 
-	void pancakeDisplay(Student s[],int n)
+	void pancakeDisplay(Student s[],int n)// to display data after sorting
 	{
 	    cout << left << setw(5) << "ID" << setw(15) << "Name" << setw(5) << "GPA" << setw(10) << "Course" << setw(15) << "Join Time" << endl;
 	    
@@ -676,7 +692,7 @@ public:
 	    }
 	}
 
-	void pancakeMenu()
+	void pancakeMenu()// menu for pancake sorting
 	{
 		int choi;
 			cout << "Original list of students:\n";
@@ -698,7 +714,7 @@ public:
 
 	}
 
-	int set3Menu()
+	int set3Menu()// menu for combination of pancake sorting and jump search
 	{
 		int choi;
 		cout << "Original list of students:\n";
@@ -768,14 +784,14 @@ bool isValidDate(int day, int month, int year) {
 int main() {
     Student s[] =
     {
-        {"1", "a", 1.3, "FIST", 11, 6, 2024},
-        {"2", "c", 1.34, "FIST", 12, 12, 2024},
-        {"3", "b", 1.4, "FOB", 31, 6, 2024},
-        {"4", "d", 1.5, "FOB", 14, 6, 2022},
-        {"5", "e", 1.78, "FET", 5, 6, 2024},
-        {"6", "f", 1.7, "FET", 6, 6, 2024},
-        {"7", "g", 1.8, "FET", 7, 8, 2024},
-        {"8", "h", 1.9, "FIST", 5, 9, 2023}
+        {"1001", "alex", 1.3, "FIST", 11, 6, 2024},
+        {"1022", "kelvin", 1.34, "FIST", 12, 12, 2024},
+        {"1243", "bryan", 1.4, "FOB", 31, 6, 2024},
+        {"1124", "derrick", 1.5, "FOB", 14, 6, 2022},
+        {"1115", "ellen", 1.78, "FET", 5, 6, 2024},
+        {"1036", "fong", 1.7, "FET", 6, 6, 2024},
+        {"1027", "gearge", 1.8, "FET", 7, 8, 2024},
+        {"1018", "harry", 1.9, "FIST", 5, 9, 2023}
     };
 
     int size = sizeof(s) / sizeof(s[0]);
