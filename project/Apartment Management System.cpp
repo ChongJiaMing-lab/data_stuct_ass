@@ -54,13 +54,13 @@ void inputpasswrd();
 void inputPassword1(string &str, int size);
 void sendReminderToCustomer(const string &reminder);
 void admin_menu();
-void tenant_menu();
+void tenant_menu(const string &tenant_ic);
 void bullet_board_display();
 void read_board();
 void write_board();
 void delete_notice();
 void inputpasswrd();
-void tenants_login();
+string tenants_login();
 void admin_passwd();
 void sa_login();
 void inputPassword(string &str, int size);
@@ -902,80 +902,61 @@ class ixora
 			
 			ixora()
 			{
+				system("cls");
 				cout<<"----------------------------"<<endl<<endl;
 				cout<<"Welcome to ixora apartment! "<<endl<<endl;
 				cout<<"----------------------------"<<endl<<endl;
 			}
 			
 			 void menu();
-			int partition(string owners[], string ic[], string tel[], int low, int high) {
-    string pivot = owners[high];
-    int i = low - 1;
+void quickSort(string arr[], string ics[], string tels[], string units[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, ics, tels, units, low, high);
+        quickSort(arr, ics, tels, units, low, pi - 1);
+        quickSort(arr, ics, tels, units, pi + 1, high);
+    }
+}
 
-    for (int j = low; j < high; j++) {
-        if (owners[j] < pivot) {
+int partition(string arr[], string ics[], string tels[], string units[], int low, int high) {
+    string pivot = arr[high];
+    int i = (low - 1);
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] < pivot) {
             i++;
-            // Swap owners[i] and owners[j]
-            string temp = owners[i];
-            owners[i] = owners[j];
-            owners[j] = temp;
-            
-            // Swap ic[i] and ic[j]
-            temp = ic[i];
-            ic[i] = ic[j];
-            ic[j] = temp;
-
-            // Swap tel[i] and tel[j]
-            temp = tel[i];
-            tel[i] = tel[j];
-            tel[j] = temp;
+            swap(arr[i], arr[j]);
+            swap(ics[i], ics[j]);
+            swap(tels[i], tels[j]);
+            swap(units[i], units[j]);
         }
     }
-    // Swap owners[i + 1] and owners[high]
-    string temp = owners[i + 1];
-    owners[i + 1] = owners[high];
-    owners[high] = temp;
-    
-    // Swap ic[i + 1] and ic[high]
-    temp = ic[i + 1];
-    ic[i + 1] = ic[high];
-    ic[high] = temp;
-
-    // Swap tel[i + 1] and tel[high]
-    temp = tel[i + 1];
-    tel[i + 1] = tel[high];
-    tel[high] = temp;
-
-    return i + 1;
+    swap(arr[i + 1], arr[high]);
+    swap(ics[i + 1], ics[high]);
+    swap(tels[i + 1], tels[high]);
+    swap(units[i + 1], units[high]);
+    return (i + 1);
 }
 
-// Quick Sort recursive function
-void quickSort(string owners[], string ic[], string tel[], int low, int high) {
-    if (low < high) {
-        int pi = partition(owners, ic, tel, low, high);
-        quickSort(owners, ic, tel, low, pi - 1);
-        quickSort(owners, ic, tel, pi + 1, high);
-    }
-}
-
-void owner_Inf() // gives the tenants view of owner information
-{
+void owner_Inf(const string &tenant_ic) {
     string owner_names[MAX_OWNERS];
     string owner_ics[MAX_OWNERS];
     string owner_tels[MAX_OWNERS];
     string owner_units[MAX_OWNERS];
+    string owner_usernames[MAX_OWNERS];
+    string owner_passwords[MAX_OWNERS];
     int owner_count = 0;
     string user_units[MAX_OWNERS];
     int user_count = 0;
-    string owner_name, owner_ic, owner_tel_no, owner_unit;
+    string owner_name, owner_ic, owner_tel_no, owner_unit,owner_username,owner_password;
     string user_unit, user_name, user_ic, user_tel_no;
+    bool unit_found = false;
+
     system("CLS");
     cout << "----------------------------" << endl << endl;
     cout << "Owner Information page " << endl << endl;
     cout << "----------------------------" << endl << endl;
 
-    ifstream fread_owner("owner.txt"); // if can't open file, it will display a failure message
-    ifstream fread_user("UserInformation.txt"); // if can't open file, it will display a failure message
+    ifstream fread_owner("owner.txt");
+    ifstream fread_user("UserInformation.txt");
 
     if (!fread_owner.is_open()) {
         cout << "Failed to open the owner.txt file!" << endl;
@@ -988,7 +969,7 @@ void owner_Inf() // gives the tenants view of owner information
     }
 
     // Read owner details from the file, including unit number
-    while (fread_owner >> owner_name >> owner_ic >> owner_tel_no >> owner_unit && owner_count < MAX_OWNERS) {
+    while (fread_owner >> owner_name >> owner_ic >> owner_tel_no >> owner_unit >> owner_username >> owner_password && owner_count < MAX_OWNERS) {
         owner_names[owner_count] = owner_name;
         owner_ics[owner_count] = owner_ic;
         owner_tels[owner_count] = owner_tel_no;
@@ -997,33 +978,43 @@ void owner_Inf() // gives the tenants view of owner information
     }
     fread_owner.close();
 
-    // Read user booking information from the file
-    while (fread_user >> user_name >> user_ic >> user_tel_no >> user_unit && user_count < MAX_OWNERS) {
-        user_units[user_count] = user_unit;
-        user_count++;
+    // Find the unit associated with the tenant's IC
+    while (fread_user >> user_name >> user_tel_no >> user_ic >> user_unit && user_count < MAX_OWNERS) {
+        if (user_ic == tenant_ic) {
+            unit_found = true;
+            break;
+        }
     }
     fread_user.close();
 
-    // Sort owner names using Quick Sort
-    quickSort(owner_names, owner_ics, owner_tels, 0, owner_count - 1);
+    if (!unit_found) {
+        cout << "No booking found for tenant with IC: " << tenant_ic << endl;
+        return;
+    }
 
-    // Display sorted owner details for matching units
+    // Sort owner names using Quick Sort
+    quickSort(owner_names, owner_ics, owner_tels, owner_units, 0, owner_count - 1);
+
+    // Display owner details for the matching unit
+    bool owner_found = false;
     for (int i = 0; i < owner_count; i++) {
-        for (int j = 0; j < user_count; j++) {
-            if (owner_units[i] == user_units[j]) 
-			{
-                cout << "Name : " << owner_names[i] << endl;
-                cout << "IC : " << owner_ics[i] << endl;
-                cout << "Telephone Number : " << owner_tels[i] << endl;
-                cout << "--------------------------------" << endl;
-            }
-			else
-			{
-				cout<<"Owner Information not found!!"<<endl;
-			}
+        if (owner_units[i] == user_unit) {
+            cout << "Name : " << owner_names[i] << endl;
+            cout << "IC : " << owner_ics[i] << endl;
+            cout << "Telephone Number : " << owner_tels[i] << endl;
+            cout << "--------------------------------" << endl;
+            owner_found = true;
+            break;
         }
     }
+
+    if (!owner_found) {
+        cout << "Owner information not found for unit: " << user_unit << endl;
+        cout << "--------------------------------" << endl;
+    }
 }
+
+
 			 
 	  		 void feedback()//to give feedback
 	  		 {
@@ -1284,11 +1275,6 @@ class visitor
 				    }
 				}
 
-				for (int i = 0; i < count; i++) 
-				{
-				    cout << "ic_found[" << i << "]: " << ic_found[i] << endl;
-				    cout << "pass[" << i << "]: " << pass[i] << endl;
-				}
 				int step = sqrt(count);
 				int n = count;
 				int prev=0;
@@ -2048,75 +2034,6 @@ void accept_request()
 	rename("temp.txt", "rental_request.txt");
 }
 
-void check_passwd()
-{
-	int found;
-	int count=0, count_limit=0;
-	string ic,storedUsername,storedPassword;
-	string ic_found[limit], pass[limit];
-	system("CLS");
-//	cout<<"Warning! This is for fist time user only!"<<endl;
-	cout<<"Please enter IC Number : ";
-	cin>>ic;
-	ifstream fread("users.txt");
-	while (fread >> storedUsername >> storedPassword)
-	{
-		ic_found[count] = storedUsername;
-	    			pass[count] = storedPassword;
-	    			count++;
-				}
-
-				for (int i = 0; i < count - 1; ++i) 
-		 for (int j = 0; j < count - i - 1; ++j) 
-					{
-				        if (ic_found[j] > ic_found[j + 1]) 
-						{
-				            string temp_ic = ic_found[j];
-				            ic_found[j] = ic_found[j + 1];
-				            ic_found[j + 1] = temp_ic;
-
-				            string temp_pass = pass[j];
-				            pass[j] = pass[j + 1];
-				            pass[j + 1] = temp_pass;
-				        }
-				    }
-				
-
-				for (int i = 0; i < count; i++) 
-				{
-				    cout << "ic_found[" << i << "]: " << ic_found[i] << endl;
-				    cout << "pass[" << i << "]: " << pass[i] << endl;
-				}
-				int step = sqrt(count);
-				int n = count;
-				int prev=0;
-				while (ic_found[min(step, count)-1] < ic)
-				{
-				    prev = step;
-				    step += sqrt(n);
-				    if (prev >= n)
-				    {
-				    found = -1;
-				    break;
-					}    
-				}
-			    while (ic_found[prev] < ic)
-			    {
-			        prev++;
-			        if (prev == min(step, n))
-			            found = -1;
-			    }
-			    if (ic_found[prev] == ic){
-			    	cout<<"Your Password is "<<pass[prev]<<endl;
-			    	found = 1;
-				}
-	
-	if(found!=1)
-	{
-		cout<<"Invalid IC, Please make sure you have entered the correct IC."<<endl;
-	}
-}
-
 void parking()
 {
 	admin_parking p;
@@ -2207,6 +2124,7 @@ int main()
 {
 	
 	int p;
+	string tenant_ic;
     
 	while(true)
 	{
@@ -2228,8 +2146,8 @@ int main()
 	else if(p == 3)
 	{
 		system("CLS");
-		tenants_login();
-		tenant_menu();
+        string tenant_ic = tenants_login();  // Get tenant's IC
+		tenant_menu(tenant_ic);
 	}
 	else if(p == 4)
 	{
@@ -2368,7 +2286,7 @@ void Admin :: admin_menu()
 	}
 }
 
-void tenant_menu()
+void tenant_menu(const string &tenant_ic)
 {
 	int choi;
 	char ans;
@@ -2390,7 +2308,7 @@ void tenant_menu()
 		{
 			case 1 : {
 				
-						tenant.owner_Inf();
+						tenant.owner_Inf(tenant_ic);
 					  	break;
 				
 					 }
@@ -2585,51 +2503,47 @@ string gettime()
 	return StoreTime;
 }
 
-void tenants_login()
-{
-	
-	string t_name,storedUsername, storedPassword;
-	int i,size=20;
-	int h =3;
-	string password;
-	
-	for(int q=0; q<3; q++)
-	{i=0;
-		cout<<"\nEnter the tenant ic: ";
-		fflush(stdin);
-		getline(cin, t_name);
-		cout<<"Enter the tenant password: ";
-		inputPassword(password,size);
-	
-	cout<<endl;
-	
-	fstream fread("users.txt");
+string tenants_login() {
+    string t_ic, stored_ic, stored_password, entered_password;
+    int login_attempts = 3;
 
-	if(fread.is_open())
-	{
-    while (fread >> storedUsername >> storedPassword)
-	 {
-	 	if (storedUsername == t_name && storedPassword == password)
-		{
-           	sleep(2);
-            cout<<"Success to login "<<endl;
-            cout<<"Welcome Back ,"<<storedUsername<<endl;
-            sleep(2);
-            system("cls");
-            return;
-		}
+    while (login_attempts > 0) {
+        cout << "Enter your IC: ";
+        cin >> t_ic;
+        cout << "Enter your password: ";
+        cin >> entered_password;
+
+        ifstream fread("users.txt");
+        if (!fread.is_open()) {
+            cout << "File opening error!" << endl;
+            return "";
+        }
+
+        bool login_success = false;
+        while (fread >> stored_ic >> stored_password) {
+            if (t_ic == stored_ic && entered_password == stored_password) {
+                login_success = true;
+                break;
+            }
+        }
+        fread.close();
+
+        if (login_success) {
+            cout << "Login successful!" << endl;
+            return t_ic;
+			system("pause");
+			system("cls");
+        } else {
+            cout << "Invalid IC or password. Please try again." << endl;
+            login_attempts--;
+        }
     }
-    fread.close();
-    h--;
-    	cout << "\nLogin failed. Incorrect username or password.\n";
-    	if(h != 0)
-    	cout<<"You still have "<<h<<" time(s) to try !\n"<<endl;
-	}
-	
-	}
-	
-	exit(0);
+
+    cout << "Login attempts exceeded. Exiting." << endl;
+    exit(0); // This will terminate the program if login attempts are exceeded
 }
+
+
 
 void admin_passwd()
 {
@@ -2971,4 +2885,5 @@ void inputPassword1(string &str, int size)
     delete[] password;
     cout << endl;
 }
+
 
