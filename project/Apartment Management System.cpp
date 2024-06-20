@@ -68,103 +68,6 @@ void visitor_menu();
 void access();
 string gettime();
 
-class SuperAdmin
-{
-	private:
-		string sa_name, sa_password;
-		string check_sn, check_sp;
-		string admin_name, admin_pass;
-	public:
-		SuperAdmin()
-		{
-			system("cls");
-			cout<<"--------------------------------"<<endl;
-			cout<<"You are now in Super Admin mode."<<endl;
-			cout<<"--------------------------------"<<endl;
-		}
-		
-		int sa_input()
-		{
-			cout<<"Enter SuperAdmin Name : ";
-			cin>>sa_name;
-			cout<<"Enter SuperAdmin Password : ";
-			cin>>sa_password;
-			if(sa_name != check_sn)
-			{
-				cout<<"Wrong Super Admin Name !"<<endl;
-				system("pause");
-				return 1;
-			}
-			else
-			{
-				if(sa_password != check_sp)
-				{
-					cout<<"Wrong SuperAdmin Password !"<<endl;
-					system("pause");
-					return 2;
-				}
-				else
-					return 3;
-
-
-			}
-		}
-		
-		void sa_menu()
-		{
-			system("cls");
-			cout<<"-----------------------------"<<endl;
-			cout<<"What you want to do..."<<endl;
-			cout<<"-----------------------------"<<endl;
-			cout<<"1. Add admin"<<endl;
-			cout<<"2. Change password"<<endl;
-		}
-		void check_sa()
-		{
-			fstream fread("super_admin.txt");
-			fread>>check_sn>>check_sp;
-			fread.close();
-		}
-		void sa_add_admin()
-		{
-			fstream fwrite("admin.txt", ios::app);
-			cout<<"Enter a new admin name : ";
-			cin>>admin_name;
-			cout<<"Set a password to the admin : ";
-			cin>>admin_pass;
-			cout<<"Successfully add the admin ["<<admin_name<<"]"<<endl;
-			fwrite<<admin_name<<endl<<admin_pass<<endl;
-			fwrite.close();
-		}
-		void sa_changepass()
-		{
-			string new_pass;
-			cout<<"Please enter old password : ";
-			cin>>new_pass;
-			if(new_pass != check_sp)
-			{
-				cout<<"You need to enter correct old password before you change it!";
-				system("pause");
-				return;
-			}
-			cout<<"Then enter new password : ";
-			cin>>new_pass;
-			ofstream empty("super_admin.txt", ios::trunc);
-			empty.close();
-			fstream fwrite("super_admin.txt", ios::app);
-			fwrite<<check_sn<<endl<<new_pass<<endl;
-			fwrite.close();
-			cout<<"Successfully change the password !"<<endl;
-			system("pause");
-			system("cls");
-		}
-		~SuperAdmin()
-		{
-			cout<<"\nThanks for using"<<endl;
-			system("pause");
-			system("cls");
-		}
-};
 
 class Search_Admin
 {
@@ -222,6 +125,7 @@ class Admin:public Search_Admin
 {
 	
 	public:
+		void admin_menu();
 		void add_owner()
 		{
 			system("cls");
@@ -1748,6 +1652,223 @@ public:
         system("cls");
     }
 };
+
+class SuperAdmin:public Admin
+{
+	private:
+		string sa_name, sa_password;
+		string check_sn, check_sp;
+		string admin_name, admin_pass;
+	public:
+		SuperAdmin()
+		{
+			system("cls");
+			cout<<"--------------------------------"<<endl;
+			cout<<"You are now in Super Admin mode."<<endl;
+			cout<<"--------------------------------"<<endl;
+		}
+		
+		int sa_input()
+		{
+			cout<<"Enter SuperAdmin Name : ";
+			cin>>sa_name;
+			cout<<"Enter SuperAdmin Password : ";
+			cin>>sa_password;
+			if(sa_name != check_sn)
+			{
+				cout<<"Wrong Super Admin Name !"<<endl;
+				system("pause");
+				return 1;
+			}
+			else
+			{
+				if(sa_password != check_sp)
+				{
+					cout<<"Wrong SuperAdmin Password !"<<endl;
+					system("pause");
+					return 2;
+				}
+				else
+					return 3;
+
+
+			}
+		}
+		
+	void admin_menu(){
+	
+	int admin_choice;
+	string name, email, msg;
+	int read;
+	
+    system("cls");
+
+	admin_parking p;
+	admin_access a;
+	while(true)
+	{
+	cout<<"=================================="<<endl<<endl;
+	cout<<"	       Super Admin mode      	 "<<endl<<endl;
+	cout<<"=================================="<<endl<<endl;
+	cout<<"What you want to do..."<<endl;
+	cout<<"1. Add admin"<<endl;
+	cout<<"2. Change password"<<endl;
+	cout<<"3. Add new owner"<<endl;
+	cout<<"4. View owner"<<endl;
+	cout<<"5. Edit owner"<<endl;
+	cout<<"6. Delete owner\n";
+	cout<<"7. View tenant"<<endl;
+	cout<<"8. View Visitor"<<endl;
+	cout<<"9. Add a parking slot for tenants"<<endl;
+	cout<<"10. View the parking slots"<<endl;
+	cout<<"11. Add a access card for tenants"<<endl;
+	cout<<"12. View the access card"<<endl;
+	cout<<"13. Edit bulletin"<<endl;
+	cout<<"14. View feedback"<<endl;
+	cout<<"15. Back to Identifier Menu"<<endl;
+	cout<<"16. Exit"<<endl;
+	cout << "Select [1-16] : ";
+	cin>>admin_choice;
+	while(admin_choice <1 || admin_choice >16)
+		{
+			cout<<"Invalid Select"<<endl;
+			cout<<"Pls Select again[1-16] :";
+			cin>>admin_choice; 
+		}
+	switch(admin_choice)
+	{
+		case 1:
+			{
+				sa_add_admin();
+				break;
+			}
+		case 3:
+			{
+				void sa_changepass();
+				break;
+			}
+		case 4:
+			{
+				view_owner();
+				break;
+			}
+		case 5:
+			{
+				search_owner();
+				edit_owner();
+				break;
+			}
+		case 6:
+			{	
+				search_owner();
+				delete_owner();
+				break;
+			}
+		case 7:
+			{
+				view_tenants();
+				break;
+			}
+		case 8:
+			{
+				view_visitor();
+				break;
+			}
+		case 9:
+			{
+				p.add_parking();
+				break;
+			}
+		case 10:
+			{
+				parking();
+				break;
+			}
+		case 11:{
+			a.add_access_card();
+			break;
+		}
+		case 12:
+		{
+			access();
+			break;
+		}
+		case 13:
+			{	
+				View_Board();
+				break;
+			}	
+			
+		case 14:
+			{
+				view_feedback();
+				break;
+			}
+		case 15:
+			{
+				return;
+				break;
+			} 
+		case 16:
+			{
+				exit(0);
+				break;
+			}
+		default:
+			{
+				cout<<"Invalid choice !!!"<<endl;
+				break;
+			}
+		}
+	}
+}
+		void check_sa()
+		{
+			fstream fread("super_admin.txt");
+			fread>>check_sn>>check_sp;
+			fread.close();
+		}
+		void sa_add_admin()
+		{
+			fstream fwrite("admin.txt", ios::app);
+			cout<<"Enter a new admin name : ";
+			cin>>admin_name;
+			cout<<"Set a password to the admin : ";
+			cin>>admin_pass;
+			cout<<"Successfully add the admin ["<<admin_name<<"]"<<endl;
+			fwrite<<admin_name<<endl<<admin_pass<<endl;
+			fwrite.close();
+		}
+		void sa_changepass()
+		{
+			string new_pass;
+			cout<<"Please enter old password : ";
+			cin>>new_pass;
+			if(new_pass != check_sp)
+			{
+				cout<<"You need to enter correct old password before you change it!";
+				system("pause");
+				return;
+			}
+			cout<<"Then enter new password : ";
+			cin>>new_pass;
+			ofstream empty("super_admin.txt", ios::trunc);
+			empty.close();
+			fstream fwrite("super_admin.txt", ios::app);
+			fwrite<<check_sn<<endl<<new_pass<<endl;
+			fwrite.close();
+			cout<<"Successfully change the password !"<<endl;
+			system("pause");
+			system("cls");
+		}
+		~SuperAdmin()
+		{
+			cout<<"\nThanks for using"<<endl;
+			system("pause");
+			system("cls");
+		}
+};
+
 int read_request()
 {
 	int count=0,found=0;
@@ -2054,14 +2175,14 @@ int main()
 }
     
 
-void admin_menu()
+void Admin :: admin_menu()
 {
 	int admin_choice;
 	string name, email, msg;
 	int read;
 	
     system("cls");
-	Admin admin;
+
 	admin_parking p;
 	admin_access a;
 	while(true)
@@ -2096,7 +2217,7 @@ void admin_menu()
 	{
 		case 1:
 			{
-				admin.add_owner();
+				add_owner();
 				break;
 			}
 		case 2:
@@ -2106,24 +2227,24 @@ void admin_menu()
 			}
 		case 3:
 			{
-				admin.search_owner();
-				admin.edit_owner();
+				search_owner();
+				edit_owner();
 				break;
 			}
 		case 4:
 			{	
-				admin.search_owner();
-				admin.delete_owner();
+				search_owner();
+				delete_owner();
 				break;
 			}
 		case 5:
 			{
-				admin.view_tenants();
+				view_tenants();
 				break;
 			}
 		case 6:
 			{
-				admin.view_visitor();
+				view_visitor();
 				break;
 			}
 		case 7:
@@ -2147,13 +2268,13 @@ void admin_menu()
 		}
 		case 11:
 			{	
-				admin.View_Board();
+				View_Board();
 				break;
 			}	
 			
 		case 12:
 			{
-				admin.view_feedback();
+				view_feedback();
 				break;
 			}
 		case 13:
@@ -2488,7 +2609,8 @@ void admin_passwd()
 		cout<<".";
         cout << "\nLogin Successful! Welcome, " << name << ".";
 		sleep(2);
-        admin_menu(); 
+		Admin admin;
+        admin.admin_menu(); 
         return;	
       }
      
@@ -2511,7 +2633,7 @@ void sa_login()
 	{
 		return;
 	}
-	sa.sa_menu();
+	sa.admin_menu();
 	cin>>sa_choice;
 	switch(sa_choice)
 	{
