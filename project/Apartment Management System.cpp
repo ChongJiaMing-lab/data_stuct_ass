@@ -390,7 +390,6 @@ class Admin:public Search_Admin
 				}
 				int owner_bubble_sort(int size) 
 				{
-				    cout << size << endl;
 				    for (int step = 0; step < size - 1; ++step) 
 					{
 				        for (int i = 0; i < size - step - 1; ++i) 
@@ -409,17 +408,46 @@ class Admin:public Search_Admin
 				{
 					cout<<"After sorting"<<endl;
 					cout << "------------------------------------" << endl;
-					 for (int j = 0;j < i; ++j) {
-					cout <<j+1<<endl;
-					cout << "------------------------------------" << endl;
-				    cout << "Owner Name           |" << oi_admin[j].owner_name << endl;
-				    cout << "Owner IC             |" << oi_admin[j].owner_ic<< endl;
-				    cout << "Owner Telephone No   |" << oi_admin[j].owner_tel_no  << endl;
-				    cout << "Unit                 |" << oi_admin[j].unit<< endl;
-				    cout << "------------------------------------" << endl << endl;
+					 for (int j = 0;j < i; ++j)
+					 {
+						cout <<j+1<<endl;
+						cout << "------------------------------------" << endl;
+					    cout << "Owner Name           |" << oi_admin[j].owner_name << endl;
+					    cout << "Owner IC             |" << oi_admin[j].owner_ic<< endl;
+					    cout << "Owner Telephone No   |" << oi_admin[j].owner_tel_no  << endl;
+					    cout << "Unit                 |" << oi_admin[j].unit<< endl;
+					    cout << "------------------------------------" << endl << endl;
+					}
 				}
+				
+			int owner_binary(int size, string u) 
+			{
+			    int low = 0;
+			    int high = size;
+			    while (low <= high) 
+				{
+			        int mid = low + (high - low) / 2;
+        			if (oi_admin[mid].owner_name == u) 
+					{
+						cout << "The owner "<<u<<" is found"<<endl;
+			            cout << "------------------------------------" << endl;
+						cout << "Owner Name           |" << oi_admin[mid].owner_name << endl;
+						cout << "Owner IC             |" << oi_admin[mid].owner_ic<< endl;
+						cout << "Owner Telephone No   |" << oi_admin[mid].owner_tel_no  << endl;
+						cout << "Unit                 |" << oi_admin[mid].unit<< endl;
+						cout << "------------------------------------" << endl;
+						return 1;
+        			} 
+					else if (oi_admin[mid].owner_name < u) 
+					{
+			            low = mid + 1;
+			        } 
+					else {
+			            high = mid - 1;
+			        }
 				}
-			
+			 return -1;
+			}
 	void view_tenants();
 	friend void view_owner();
 };
@@ -518,7 +546,8 @@ void view_owner() {
 	owner_c -= 1;
 	int search_o_choice;
 	cout<<"1.Sort owner with name"<<endl;
-	cout<<"2.Back"<<endl;
+	cout<<"2.Search owner with name"<<endl;
+	cout<<"3.Back"<<endl;
 	cin>>search_o_choice;
 	Admin a;
 	if(search_o_choice == 1)
@@ -526,6 +555,17 @@ void view_owner() {
 		a.search_owner();
 		a.owner_bubble_sort(owner_c);
 		a.display_owner();
+	}
+	else if(search_o_choice ==2)
+	{
+		string name;
+		cout<<"Enter the name to search:"<<endl;
+		cin>>name;
+		a.search_owner();
+		a.owner_bubble_sort(owner_c);
+		int result_b = a.owner_binary(owner_c, name);
+		if(result_b == -1)
+		       	cout<<"Owner "<<name<<" is not found."<<endl;
 	}
     system("pause");
     system("cls");
