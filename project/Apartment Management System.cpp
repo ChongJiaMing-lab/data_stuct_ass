@@ -2080,13 +2080,7 @@ void check_passwd()
 				            pass[j + 1] = temp_pass;
 				        }
 				    }
-				
-
-				for (int i = 0; i < count; i++) 
-				{
-				    cout << "ic_found[" << i << "]: " << ic_found[i] << endl;
-				    cout << "pass[" << i << "]: " << pass[i] << endl;
-				}
+			
 				int step = sqrt(count);
 				int n = count;
 				int prev=0;
