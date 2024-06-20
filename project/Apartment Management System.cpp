@@ -468,6 +468,8 @@ void Admin::view_tenants()
 	string line;
 	while (getline(fread, line)) 
 	{
+		cout<<"test"<<endl;
+		
     	istringstream iss(line);
 
         getline(iss, t_name);
@@ -599,12 +601,20 @@ public:
 		}
         read.close();
     }
-    
-    void selection_sort()
-    {
-    	
+	void refresh()
+	{
+		head = NULL;
+		
+		ifstream read("UserInformation.txt");
+        while(getline(read,tenant_name))
+        {
+        	getline(read,tenant_tel_no);
+        	getline(read,tenant_ic);
+        	getline(read,tenant_block);
+        	
+        	add_node(tenant_name, tenant_ic, tenant_tel_no,tenant_block);
+		}read.close();
 	}
-
     void ow_menu();
     
     void add_node(string n,string ic,string tel,string block)
@@ -659,7 +669,7 @@ public:
 	{
 		int found = 0;
 		temp = head;
-		while(temp!=NULL&&temp->name != target)
+		while( temp!=NULL &&temp->name != target)
 		{
 			prev = temp;
 			temp=temp->next;
@@ -670,7 +680,23 @@ public:
 			delete temp;
 			found =1;
 		}
+		if(found == 1)
+		{
+			rewrite();
+		}
 		return found;
+	}
+	
+	void rewrite()
+	{
+		temp = head;
+		ofstream accept2("UserInformation.txt");
+		while(temp!=NULL)
+		{
+		accept2<<temp->name<<endl<<temp->tel<<endl<<temp->ic<<endl<<temp->block<<endl;
+		temp = temp->next;
+		}
+		accept2.close();
 	}
 	
 	void read_node()
@@ -691,7 +717,7 @@ public:
 	
 	void read_visitor_node()
 	{
-		temp = head;
+		vtemp = head;
 		while(temp!=NULL)
 		{
 			if(vtemp->block == owner_block)
@@ -702,7 +728,7 @@ public:
                 cout << "Visitor Request Block: " << vtemp->block << endl;
                 cout << "-------------------------------------" << endl;
 			}
-			temp = temp->next;
+			vtemp = vtemp->next;
 		}
 	}
 	
@@ -723,10 +749,10 @@ public:
             {
                 while (fread >> visitor_name >> visitor_ic >> visitor_tel_no >> visitor_request_block)
                 {
-                    add_visitor_node(visitor_name,visitor_ic,visitor_tel_no,visitor_request_block);
+                    add_node(visitor_name,visitor_ic,visitor_tel_no,visitor_request_block);
                 }
                 
-                read_visitor_node();
+                read_node();
             }
             fread.close();
 
@@ -749,7 +775,7 @@ public:
         cout << "\033[1;33m-------------------------------------\033[0m" << endl << endl;
         cout << "\033[1;33m-----  View Tenant Information  -----\033[0m" << endl << endl;
         cout << "\033[1;33m-------------------------------------\033[0m" << endl << endl;
-
+		refresh();
         read_node();
         system("pause");
     }
@@ -762,14 +788,14 @@ public:
         cout << "\033[1;33m-------------------------------------\033[0m" << endl << endl;
 
         string targetTenantName;
+        read_node();
         cout << "Enter the name of the tenant to Delete: ";
         cin.ignore();
         getline(cin, targetTenantName);
 
-		read_node();
 		int found = del_node(targetTenantName);
 
-        if (found)
+        if (found == 1)
         {
             cout << "Tenant has been deleted successfully!" << endl;
         }
@@ -1929,7 +1955,7 @@ void accept_request()
 	int count = read_request();
 	ifstream fread("rental_request.txt");
 	ofstream temp("temp.txt");
-	ofstream accept2("UserInformation.txt");
+	ofstream accept2("UserInformation.txt",ios::app);
 	ofstream accept("users.txt",ios::app);
 	if(!fread.is_open())
 	{
