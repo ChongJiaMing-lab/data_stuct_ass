@@ -24,6 +24,22 @@ struct Board
 	int num;
 };
 
+
+struct owner_info{
+	string owner_name;
+	string owner_ic;
+	string owner_tel_no;
+	string unit;
+	string owner_un;
+	string owner_pass;
+};
+
+struct node
+{
+  owner_info oi;
+  struct node *next;
+};
+
 struct nodeTenant
 {
 	nodeTenant *next;
@@ -158,6 +174,7 @@ class Search_Admin
 		
 		string select_name[limit], select_ic[limit], select_tel[limit];
 		string select_unit[limit], select_un[limit], select_pass[limit];
+		owner_info oi_admin[limit];
 	public:
 		 void search_owner()
 			 {
@@ -180,6 +197,13 @@ class Search_Admin
 					getline(fread, unit);
 					getline(fread, owner_un);
 					getline(fread, owner_pass);
+					
+					oi_admin[i].owner_name = owner_name;
+					oi_admin[i].owner_ic = owner_ic;
+					oi_admin[i].owner_tel_no = owner_tel_no;
+					oi_admin[i].unit = unit;
+					oi_admin[i].owner_un = owner_un;
+					oi_admin[i].owner_pass = owner_pass;
 					
        				select_name[i] = owner_name;
       		 		select_ic[i] = owner_ic;
@@ -460,6 +484,38 @@ class Admin:public Search_Admin
 					}
 					fread.close();
 				}
+				int owner_bubble_sort(int size) 
+				{
+				    cout << size << endl;
+				    for (int step = 0; step < size - 1; ++step) 
+					{
+				        for (int i = 0; i < size - step - 1; ++i) 
+						{
+				            if (oi_admin[i].owner_name > oi_admin[i + 1].owner_name) 
+							{
+				                owner_info temp = oi_admin[i];
+				                oi_admin[i] = oi_admin[i + 1];
+				                oi_admin[i + 1] = temp;
+				            }
+				        }
+				    }
+				}
+   				
+				void display_owner()
+				{
+					cout<<"After sorting"<<endl;
+					cout << "------------------------------------" << endl;
+					 for (int j = 0;j < i; ++j) {
+					cout <<j+1<<endl;
+					cout << "------------------------------------" << endl;
+				    cout << "Owner Name           |" << oi_admin[j].owner_name << endl;
+				    cout << "Owner IC             |" << oi_admin[j].owner_ic<< endl;
+				    cout << "Owner Telephone No   |" << oi_admin[j].owner_tel_no  << endl;
+				    cout << "Unit                 |" << oi_admin[j].unit<< endl;
+				    cout << "------------------------------------" << endl << endl;
+				}
+				}
+			
 	void view_tenants();
 	friend void view_owner();
 };
@@ -500,45 +556,76 @@ void Admin::view_tenants()
 		system("cls");	
 }
 
-void view_owner()
-{
-	Admin a;
-	string mt;
-	
-	system("cls");
-	int owner_c=1;
-	cout<<"======================"<<endl;
-	cout<<"Owner(s) Info"<<endl;
-	cout<<"======================"<<endl<<endl;
-	fstream fread("owner.txt");
-	if(!fread)
-	{
-		cout<<"Failed to get the admin list!!!"<<endl;
-	}
-	string line;
-	while (getline(fread, line)) 
-	{
-    	istringstream iss(line);
+void view_owner() {
+    system("cls");
+    int owner_c = 1;
+    cout<<"======================"<<endl;
+    cout<<"Owner(s) Info" << endl;
+    cout<<"======================"<<endl<<endl;
 
-        getline(iss, a.owner_name);
-        getline(fread, a.owner_ic);
-        getline(fread, a.owner_tel_no);
-        getline(fread, mt);
-        getline(fread, mt);
-        getline(fread, mt);
+    fstream fread("owner.txt");
+    if(!fread) {
+        cout<<"Failed to get the admin list"<<endl;
+        return;
+    }
+
+    node *head = NULL;
+    node *current = NULL;
+
+    string line;
+    while (getline(fread, line)) {
+        owner_info oi;
+        oi.owner_name = line;
+
+        if (!getline(fread, oi.owner_ic)) break;
+        getline(fread, oi.owner_tel_no);
+        getline(fread, oi.unit);
+        getline(fread, oi.owner_un);
+        getline(fread, oi.owner_pass);
+
+        node *new_node = new node;
+        new_node->oi = oi;
+        new_node->next = NULL;
+
+        if (!head) {
+            head = new_node;
+            current = head;
+        } else {
+            current->next = new_node;
+            current = new_node;
+        }
+    }
+    fread.close();
+
+    node *temp = head;
+    while (temp != NULL) {
         cout<<"Owner "<<owner_c++<<endl;
-		cout<<"------------------------------------"<<endl;
-        cout << "Owner Name           |"<<a.owner_name <<endl;
-        cout << "Owner IC             |"<<a.owner_ic<<endl;
-        cout << "Owner Telephone. No  |"<<a.owner_tel_no<<endl;
-        cout<<"------------------------------------"<<endl<<endl;
-     }
         cout<<"------------------------------------"<<endl;
-		fread.close();
-		system("pause");
-		system("cls");	
-}
+        cout<<"Owner Name           |"<<temp->oi.owner_name<<endl;
+        cout<<"Owner IC             |"<<temp->oi.owner_ic<<endl;
+        cout<<"Owner Telephone No   |"<<temp->oi.owner_tel_no<<endl;
+        cout<<"------------------------------------"<<endl<<endl;
+        temp = temp->next;
+    }
+    cout<<"------------------------------------"<<endl;
 
+    delete head;
+	delete temp;
+	owner_c -= 1;
+	int search_o_choice;
+	cout<<"1.Sort owner with name"<<endl;
+	cout<<"2.Back"<<endl;
+	cin>>search_o_choice;
+	Admin a;
+	if(search_o_choice == 1)
+	{
+		a.search_owner();
+		a.owner_bubble_sort(owner_c);
+		a.display_owner();
+	}
+    system("pause");
+    system("cls");
+}
 
 class owner
 {
