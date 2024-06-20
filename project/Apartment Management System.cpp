@@ -14,7 +14,7 @@
 #define limit 1000
 using namespace std;
 
-string current_user;
+string current_user,owner_block;
 const int MAX_OWNERS = 100;
  
 struct Board
@@ -39,6 +39,13 @@ struct node
   owner_info oi;
   struct node *next;
 };
+
+struct nodeTenant
+{
+	nodeTenant *next;
+	string name,ic,tel,block;
+};
+
 
 void owner_login();
 void owner_menu();
@@ -663,9 +670,10 @@ void view_owner() {
 class owner
 {
 private:
+	nodeTenant *head, *temp,*prev,*vhead,*vtemp;
 public:
     void editAndViewTenantsInfo();
-    string tenant_name, tenant_ic, tenant_tel_no;
+    string tenant_name, tenant_ic, tenant_tel_no,tenant_block;
     string select_name[al], select_ic[al], select_tel[al];
     int i;
     string visitor_name, visitor_ic, visitor_tel_no, visitor_request_block;
@@ -675,10 +683,126 @@ public:
         cout << "\033[1;33m----------------------------------\033[0m" << endl << endl;
         cout << "\033[1;33m       Welcome To Owner Menu      \033[0m" << endl << endl;
         cout << "\033[1;33m----------------------------------\033[0m" << endl << endl;
+        
+        ifstream read("UserInformation.txt");
+        while(getline(read,tenant_name))
+        {
+        	getline(read,tenant_tel_no);
+        	getline(read,tenant_ic);
+        	getline(read,tenant_block);
+        	
+        	add_node(tenant_name, tenant_ic, tenant_tel_no,tenant_block);
+		}
+        read.close();
     }
+    
+    void selection_sort()
+    {
+    	
+	}
 
     void ow_menu();
-
+    
+    void add_node(string n,string ic,string tel,string block)
+    {
+    	if (head == NULL)
+    	{
+    		head = new nodeTenant;
+			head->name = n;
+			head->tel = tel;
+			head->ic = ic;
+			head->block = block;
+			head->next = NULL;
+			temp=head;
+		}
+		else
+		{
+			temp->next = new nodeTenant;
+			temp = temp->next;
+			temp->name = n;
+			temp->tel = tel;
+			temp->ic = ic;
+			temp->block = block;
+			temp->next=NULL;
+		}
+	}
+	
+	void add_visitor_node(string n,string ic,string tel,string block)
+    {
+    	if (vhead == NULL)
+    	{
+    		vhead = new nodeTenant;
+			vhead->name = n;
+			vhead->tel = tel;
+			vhead->ic = ic;
+			vhead->block = block;
+			vhead->next = NULL;
+			vtemp = vhead;
+		}
+		else
+		{
+			vtemp->next = new nodeTenant;
+			vtemp = vtemp->next;
+			vtemp->name = n;
+			vtemp->tel = tel;
+			vtemp->ic = ic;
+			vtemp->block = block;
+			vtemp->next=NULL;
+		}
+	}
+	
+	int del_node(string target)
+	{
+		int found = 0;
+		temp = head;
+		while(temp!=NULL&&temp->name != target)
+		{
+			prev = temp;
+			temp=temp->next;
+		}
+		if(temp != NULL)
+		{
+			prev->next = temp->next;
+			delete temp;
+			found =1;
+		}
+		return found;
+	}
+	
+	void read_node()
+	{
+		temp = head;
+		while(temp!=NULL)
+		{
+			if(temp->block == owner_block)
+			{
+			cout << "Tenant Name: " << temp->name << endl;
+            cout << "Tenant IC: " << temp->ic << endl;
+            cout << "Tenant Telephone No: " << temp->tel << endl;
+            cout << "-------------------------------------" << endl;
+			}
+			temp = temp->next;
+		}
+	}
+	
+	void read_visitor_node()
+	{
+		temp = head;
+		while(temp!=NULL)
+		{
+			if(vtemp->block == owner_block)
+			{
+				cout << "Visitor Name: " << vtemp->name << endl;
+                cout << "Visitor IC: " << vtemp->ic << endl;
+                cout << "Visitor Telephone No: " << vtemp->tel << endl;
+                cout << "Visitor Request Block: " << vtemp->block << endl;
+                cout << "-------------------------------------" << endl;
+			}
+			temp = temp->next;
+		}
+	}
+	
+	
     void viewrequest()
     {
         while (true)
@@ -695,12 +819,10 @@ public:
             {
                 while (fread >> visitor_name >> visitor_ic >> visitor_tel_no >> visitor_request_block)
                 {
-                    cout << "Visitor Name: " << visitor_name << endl;
-                    cout << "Visitor IC: " << visitor_ic << endl;
-                    cout << "Visitor Telephone No: " << visitor_tel_no << endl;
-                    cout << "Visitor Request Block: " << visitor_request_block << endl;
-                    cout << "-------------------------------------" << endl;
+                    add_visitor_node(visitor_name,visitor_ic,visitor_tel_no,visitor_request_block);
                 }
+                
+                read_visitor_node();
             }
             fread.close();
 
@@ -719,27 +841,12 @@ public:
     void viewTenantInformation()
     {
         system("CLS");
-        ifstream fread("viewtenant.txt");
         
         cout << "\033[1;33m-------------------------------------\033[0m" << endl << endl;
         cout << "\033[1;33m-----  View Tenant Information  -----\033[0m" << endl << endl;
         cout << "\033[1;33m-------------------------------------\033[0m" << endl << endl;
 
-        if (!fread)
-        {
-            cout << "Error opening the file!" << endl;
-        }
-        else
-        {
-            while (fread >> tenant_name >> tenant_ic >> tenant_tel_no)
-            {
-                cout << "Tenant Name: " << tenant_name << endl;
-                cout << "Tenant IC: " << tenant_ic << endl;
-                cout << "Tenant Telephone No: " << tenant_tel_no << endl;
-                cout << "-------------------------------------" << endl;
-            }
-        }
-        fread.close();
+        read_node();
         system("pause");
     }
 
@@ -747,53 +854,20 @@ public:
     {
         system("CLS");
         cout << "\033[1;33m-------------------------------------\033[0m" << endl << endl;
-        cout << "\033[1;33m-----  Edit Tenant Information  -----\033[0m" << endl << endl;
+        cout << "\033[1;33m-----      Delete Tenant        -----\033[0m" << endl << endl;
         cout << "\033[1;33m-------------------------------------\033[0m" << endl << endl;
 
         string targetTenantName;
-        cout << "Enter the name of the tenant to edit: ";
+        cout << "Enter the name of the tenant to Delete: ";
         cin.ignore();
         getline(cin, targetTenantName);
 
-        ifstream file("viewtenant.txt");
-        if (!file)
-        {
-            cout << "Error opening the file!" << endl;
-            return;
-        }
-
-        ofstream tempFile("temp_viewtenant.txt");
-        bool found = false;
-
-        while (file >> tenant_name >> tenant_ic >> tenant_tel_no)
-        {
-            if (tenant_name == targetTenantName)
-            {
-                found = true;
-                cout << "Enter updated name for " << tenant_name << ": ";
-                cin >> tenant_name;
-                cout << "Enter updated IC for " << tenant_name << ": ";
-                cin >> tenant_ic;
-                cout << "Enter updated Telephone No for " << tenant_name << ": ";
-                cin >> tenant_tel_no;
-
-                tempFile << tenant_name << " " << tenant_ic << " " << tenant_tel_no << endl;
-            }
-            else
-            {
-                tempFile << tenant_name << " " << tenant_ic << " " << tenant_tel_no << endl;
-            }
-        }
-
-        file.close();
-        tempFile.close();
-
-        remove("viewtenant.txt");
-        rename("temp_viewtenant.txt", "viewtenant.txt");
+		read_node();
+		int found = del_node(targetTenantName);
 
         if (found)
         {
-            cout << "Tenant information updated successfully!" << endl;
+            cout << "Tenant has been deleted successfully!" << endl;
         }
         else
         {
@@ -849,22 +923,43 @@ public:
 
 void add_room()
 {
-	string Unit,Name,PN;
+	string Unit,Name,PN,line;
+	string owner_name,owner_ic,owner_tel_no,owner_unit,owner_username,owner_passwd;
+	char choice;
 	system("CLS");
         cout << "-------------------------------------" << endl
              << endl;
         cout << "-----    Add room Information   -----" << endl
              << endl;
         cout << "-------------------------------------" << endl;
-	ofstream write("room.txt",ios::app);
-	cout<<"Please Enter Your Unit : ";
-	cin>>Unit;
-	cout<<"Please Enter Your Name : ";
-	cin>>Name;
-	cout<<"Please Enter Your Phone Number : ";
-	cin>>PN;
-	
-	write<<Unit<<endl<<Name<<endl<<PN<<endl;
+    ifstream rread("owner.txt");
+    ofstream wwrite("room.txt",ios::app);
+	cout<<"Do You want to post your name ,phone number and unit to the room rental system?[Y or N]"<<endl;
+	cin>>choice;
+	if(choice == 'Y' || choice == 'y')	{
+
+	while (getline(rread, line))
+		{
+            istringstream iss(line);
+			
+            owner_name = line;
+            getline(rread, owner_ic);
+            getline(rread, owner_tel_no);
+            getline(rread, owner_unit);
+            getline(rread, owner_username);
+            getline(rread, owner_passwd);
+
+            	if(owner_username == current_user)
+            	{
+				
+				wwrite<<owner_unit<<endl<<owner_name<<endl<<owner_tel_no<<endl;
+				cout<<"Your Information has been uploaded successfully."<<endl<<endl;
+		}
+	}
+		}
+		wwrite.close();
+		rread.close();
+		
 }
 };
 
@@ -1770,7 +1865,7 @@ void check_passwd()
 	{
 		if(ic == storedUsername)
 		{
-			cout<<"Your Password is "<<storedPassword;
+			cout<<"Your Password is "<<storedPassword<<endl;
 			found =1;
 		}
 	}
@@ -2447,7 +2542,7 @@ void owner::editAndViewTenantsInfo()
              << endl;
 
         cout << "1. View Tenant Information" << endl;
-        cout << "2. Edit Tenant Information" << endl;
+        cout << "2. Delete Tenant Information" << endl;
         cout << "3. Go Back to Owner Menu" << endl;
 
         int option;
@@ -2576,7 +2671,7 @@ void owner_login()
 	
 	            getline(fread, line);
 	            getline(fread, line);
-	            getline(fread, line);
+	            getline(fread, owner_block);
 	            getline(fread, storedUsername);
 	            getline(fread, storedPassword);
 	            if (storedUsername == t_name && storedPassword == password)
