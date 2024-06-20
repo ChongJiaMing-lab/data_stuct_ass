@@ -9,6 +9,7 @@
 #include <sstream>
 #include<unistd.h>
 #include<vector>
+#include <cmath>
 #define al 5
 #define rental 50
 #define limit 1000
@@ -1319,21 +1320,69 @@ class visitor
 		}
 		void check_passwd()
 			{
+				
 				int found;
+				int count=0, count_limit=0;
 				string ic,storedUsername,storedPassword;
+				string ic_found[limit], pass[limit];
 				system("CLS");
 			//	cout<<"Warning! This is for fist time user only!"<<endl;
 				cout<<"Please enter IC Number : ";
 				cin>>ic;
 				ifstream fread("users.txt");
-				while (fread >> storedUsername >> storedPassword)
+				while (fread >> storedUsername >> storedPassword) 
 				{
-					if(ic == storedUsername)
-					{
-						cout<<"Your Password is "<<storedPassword;
-						found =1;
-					}
+	    			ic_found[count] = storedUsername;
+	    			pass[count] = storedPassword;
+	    			count++;
 				}
+
+				for (int i = 0; i < count - 1; ++i) 
+				{
+				    for (int j = 0; j < count - i - 1; ++j) 
+					{
+				        if (ic_found[j] > ic_found[j + 1]) 
+						{
+				            string temp_ic = ic_found[j];
+				            ic_found[j] = ic_found[j + 1];
+				            ic_found[j + 1] = temp_ic;
+				
+				            string temp_pass = pass[j];
+				            pass[j] = pass[j + 1];
+				            pass[j + 1] = temp_pass;
+				        }
+				    }
+				}
+
+				for (int i = 0; i < count; i++) 
+				{
+				    cout << "ic_found[" << i << "]: " << ic_found[i] << endl;
+				    cout << "pass[" << i << "]: " << pass[i] << endl;
+				}
+				int step = sqrt(count);
+				int n = count;
+				int prev=0;
+				while (ic_found[min(step, count)-1] < ic)
+				{
+				    prev = step;
+				    step += sqrt(n);
+				    if (prev >= n)
+				    {
+				    found = -1;
+				    break;
+					}    
+				}
+			    while (ic_found[prev] < ic)
+			    {
+			        prev++;
+			        if (prev == min(step, n))
+			            found = -1;
+			    }
+			    if (ic_found[prev] == ic){
+			    	cout<<"Your Password is "<<pass[prev]<<endl;
+			    	found = 1;
+				}
+			 	
 				if(found!=1)
 				{
 					cout<<"Invalid IC, Please make sure you have entered the correct IC."<<endl;
